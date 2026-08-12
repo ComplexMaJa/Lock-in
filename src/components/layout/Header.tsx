@@ -1,10 +1,16 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { getOSUsername } from '../../utils/getOSUsername';
 import { Bell, User, Sparkles, Menu, Sun, Moon } from 'lucide-react';
 import { CatDoodle } from '../common/Doodle';
 
 export const Header: React.FC = () => {
   const { userProfile, setActiveTab, setIsMobileDrawerOpen, theme, toggleTheme } = useApp();
+
+  const hour = new Date().getHours();
+  const timeGreeting = hour < 12 ? 'GOOD MORNING,' : hour < 18 ? 'GOOD AFTERNOON,' : 'GOOD EVENING,';
+  const osUsername = getOSUsername();
+  const displayName = userProfile.name && userProfile.name !== 'Bumi' ? userProfile.name : osUsername;
 
   return (
     <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 sm:pb-4 relative select-none">
@@ -12,10 +18,10 @@ export const Header: React.FC = () => {
       <div className="flex items-center justify-between w-full md:w-auto">
         <div>
           <div className="flex items-baseline gap-2">
-            <span className="text-xs font-bold tracking-widest text-lockin-muted uppercase">GOOD EVENING,</span>
+            <span className="text-xs font-bold tracking-widest text-lockin-muted uppercase">{timeGreeting}</span>
           </div>
           <h2 className="text-3xl font-extrabold text-lockin-dark tracking-tight flex items-center gap-1.5 mt-0.5">
-            {userProfile.name}
+            {displayName}
             <span className="text-lockin-red font-bold">.</span>
           </h2>
           <p className="text-sm font-medium text-lockin-muted mt-1">

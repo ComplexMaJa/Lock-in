@@ -1,19 +1,14 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import type { ActivityItem } from '../../types';
-import { getFocusNowQuest } from '../../utils/priority';
 import { XPProgressBar } from '../common/XPProgressBar';
-import { CircularProgress } from '../common/CircularProgress';
 import { Badge } from '../common/Badge';
-import { SparkleDoodle } from '../common/Doodle';
-import heroImg from '../../assets/hero.png';
+import { FocusNowCard } from '../common/FocusNowCard';
 import bannerImg from '../../assets/banner.png';
 import {
-  Flame,
   Zap,
   Gift,
   ChevronRight,
-  TrendingUp,
   Award
 } from 'lucide-react';
 
@@ -28,65 +23,22 @@ export const DashboardView: React.FC = () => {
     setActiveTab,
   } = useApp();
 
-  const focusNowQuest = getFocusNowQuest(quests);
   const completedTodayCount = quests.filter(q => q.completed).length;
   const totalTodayCount = quests.length;
 
   return (
     <div className="space-y-5 pb-12 animate-page-pop select-none">
-      {/* Top Main Grid Layout */}
+      
+      {/* MAIN DASHBOARD GRID LAYOUT (2 Columns: Left 7 cols, Right 5 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
-        {/* Left Dominant Column (7 cols): FOCUS NOW + TODAY'S QUESTS */}
+        
+        {/* LEFT COLUMN (7 cols): FocusNowCard + TODAY'S QUESTS + SKILL PROGRESSION */}
         <div className="lg:col-span-7 space-y-4">
           
-          {/* FOCUS NOW Card - Compact & Punchy */}
-          <div className="stationery-card p-5 sm:p-6 relative overflow-hidden bg-gradient-to-br from-lockin-card via-lockin-card to-lockin-soft-pink/15 border-2 border-lockin-soft-pink soft-glow-pink shadow-md animate-card-pop stagger-1">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative z-10">
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-black tracking-widest text-lockin-muted uppercase">FOCUS NOW</span>
-                  <Badge variant="priority" size="sm">Highest Priority</Badge>
-                </div>
+          {/* 1. FOCUS NOW Hero Card (Compact Left Placement) */}
+          <FocusNowCard />
 
-                <h3 className="text-2xl sm:text-3xl font-black text-lockin-dark tracking-tight leading-snug">
-                  {focusNowQuest ? focusNowQuest.title : 'All Quests Completed!'}
-                </h3>
-
-                {focusNowQuest ? (
-                  <div className="flex flex-wrap items-center gap-2.5 text-xs font-bold text-lockin-muted pt-0.5">
-                    <span>{focusNowQuest.deadline || 'Due soon'}</span>
-                    <span>•</span>
-                    <span>{focusNowQuest.durationMin} min estimated</span>
-                    <Badge variant="xp">+{focusNowQuest.xp} XP</Badge>
-                  </div>
-                ) : (
-                  <p className="text-xs text-lockin-muted">No urgent tasks remaining. Enjoy your focus time!</p>
-                )}
-
-                <div className="pt-3">
-                  <button
-                    onClick={() => startFocusSession(focusNowQuest || undefined)}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-lockin-red text-white font-black text-xs rounded-full shadow-pill hover:bg-[#c45a61] transition-all transform hover:scale-[1.03] active:scale-95"
-                  >
-                    <Zap className="w-3.5 h-3.5 fill-white" />
-                    <span>START QUEST</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Compact Hero Mascot Illustration */}
-              <div className="self-center sm:self-auto shrink-0 relative">
-                <img
-                  src={heroImg}
-                  alt="Hero Mascot"
-                  className="w-32 sm:w-36 lg:w-40 h-auto drop-shadow-md object-contain transform hover:scale-105 transition-transform duration-300 animate-float"
-                />
-                <SparkleDoodle color="#F8E7A8" className="absolute -top-2 -right-2 w-5 h-5 animate-pulse" />
-              </div>
-            </div>
-          </div>
-
-          {/* TODAY'S QUESTS Card */}
+          {/* 2. TODAY'S QUESTS Card */}
           <div className="stationery-card p-4.5 sm:p-5 animate-card-pop stagger-2">
             <div className="flex items-center justify-between mb-3 border-b border-lockin-border/60 pb-3">
               <div>
@@ -142,77 +94,40 @@ export const DashboardView: React.FC = () => {
               ))}
             </div>
           </div>
+
+          {/* 3. SKILL PROGRESSION Card */}
+          <div className="stationery-card p-4.5 sm:p-5 animate-card-pop stagger-3">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-[11px] font-black tracking-wider text-lockin-muted uppercase">SKILL PROGRESSION</h4>
+              <button
+                onClick={() => setActiveTab('Skills')}
+                className="text-xs font-bold text-lockin-red hover:underline flex items-center gap-0.5"
+              >
+                <span>View all</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {skills.map(skill => (
+                <div key={skill.id} className="p-2.5 bg-lockin-secondary/50 rounded-xl border border-lockin-border/80">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs font-extrabold text-lockin-dark">{skill.name}</span>
+                    <span className="text-[11px] font-bold text-lockin-muted">Lv. {skill.level}</span>
+                  </div>
+                  <XPProgressBar progressPercent={skill.progressPercent} barColor="bg-lockin-red" height={6} showPercentText />
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
 
-        {/* Right Status Column (5 cols): Player Status, Level/Rank, Streak, Score, Next Reward */}
+        {/* RIGHT COLUMN (5 cols): NEXT LEVEL REWARD + BANNER + ACHIEVEMENTS & ACTIVITY */}
         <div className="lg:col-span-5 space-y-4">
 
-          {/* Level & Rank Card */}
-          <div className="stationery-card p-4.5 sm:p-5 animate-card-pop stagger-3">
-            <div className="grid grid-cols-2 gap-3 divide-x divide-lockin-border">
-              {/* LEVEL */}
-              <div className="pr-2">
-                <span className="text-[10px] font-black tracking-wider text-lockin-muted uppercase">LEVEL</span>
-                <p className="text-2xl font-black text-lockin-dark mt-0.5">{userProfile.level}</p>
-                <div className="flex items-center gap-1 text-[10px] font-bold text-lockin-red mt-0.5">
-                  <TrendingUp className="w-3 h-3" />
-                  <span>{userProfile.currentXp.toLocaleString()} / {userProfile.maxXp.toLocaleString()} XP</span>
-                </div>
-                <div className="mt-1.5">
-                  <XPProgressBar progressPercent={userProfile.levelProgressPercent} barColor="bg-lockin-red" height={6} />
-                  <span className="text-[9px] font-bold text-lockin-muted mt-0.5 block text-right">
-                    {userProfile.levelProgressPercent}%
-                  </span>
-                </div>
-              </div>
-
-              {/* RANK */}
-              <div className="pl-3">
-                <span className="text-[10px] font-black tracking-wider text-lockin-muted uppercase">RANK</span>
-                <p className="text-2xl font-black text-lockin-dark mt-0.5">{userProfile.rank}</p>
-                <div className="text-[10px] font-bold text-lockin-muted mt-0.5">
-                  <span>{userProfile.rankProgressPercent}% to S Rank</span>
-                </div>
-                <div className="mt-1.5">
-                  <XPProgressBar progressPercent={userProfile.rankProgressPercent} barColor="bg-lockin-dark" height={6} />
-                  <span className="text-[9px] font-bold text-lockin-muted mt-0.5 block text-right">
-                    {userProfile.rankProgressPercent}%
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Streak & Today's Score Row */}
-          <div className="grid grid-cols-2 gap-3 animate-card-pop stagger-4">
-            {/* Streak Card */}
-            <div className="stationery-card p-4 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-1.5 text-lockin-red">
-                  <Flame className="w-4.5 h-4.5 fill-lockin-red animate-pulse" />
-                  <span className="text-lg font-black text-lockin-dark">{userProfile.streakDays}</span>
-                </div>
-                <p className="text-[10px] font-black tracking-wider text-lockin-muted uppercase mt-0.5">DAY STREAK</p>
-              </div>
-              <p className="text-[10px] font-semibold text-lockin-muted mt-2">
-                "Keep the run alive."
-              </p>
-            </div>
-
-            {/* Today's Score Card */}
-            <div className="stationery-card p-3 flex flex-col items-center justify-center">
-              <CircularProgress
-                value={userProfile.todayScore}
-                grade={userProfile.todayGrade}
-                size={70}
-                strokeWidth={6}
-                label="TODAY'S SCORE"
-              />
-            </div>
-          </div>
-
-          {/* Next Level Reward Preview Card */}
-          <div className="stationery-card p-4 bg-gradient-to-r from-lockin-card via-lockin-card to-lockin-cream/30 border border-lockin-border animate-card-pop stagger-5">
+          {/* 1. Next Level Reward Preview Card */}
+          <div className="stationery-card p-4 bg-gradient-to-r from-lockin-card via-lockin-card to-lockin-cream/30 border border-lockin-border animate-card-pop stagger-4">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-black tracking-wider text-lockin-muted uppercase">NEXT LEVEL REWARD</span>
@@ -233,8 +148,8 @@ export const DashboardView: React.FC = () => {
             </div>
           </div>
 
-          {/* Aesthetic Banner Card */}
-          <div className="stationery-card overflow-hidden p-0 relative border-2 border-lockin-soft-pink/60 shadow-sm group hover:border-lockin-red transition-all animate-card-pop stagger-6">
+          {/* 2. Aesthetic Banner Card */}
+          <div className="stationery-card overflow-hidden p-0 relative border-2 border-lockin-soft-pink/60 shadow-sm group hover:border-lockin-red transition-all animate-card-pop stagger-5">
             <img
               src={bannerImg}
               alt="LOCK-IN RPG Banner"
@@ -242,44 +157,9 @@ export const DashboardView: React.FC = () => {
             />
           </div>
 
-        </div>
-      </div>
-
-      {/* Bottom Grid: SKILL PROGRESSION + RECENT ACHIEVEMENTS & ACTIVITY */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
-
-        {/* SKILL PROGRESSION Card (7 cols) */}
-        <div className="lg:col-span-7 stationery-card p-4.5 sm:p-5 animate-card-pop stagger-7">
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="text-[11px] font-black tracking-wider text-lockin-muted uppercase">SKILL PROGRESSION</h4>
-            <button
-              onClick={() => setActiveTab('Skills')}
-              className="text-xs font-bold text-lockin-red hover:underline flex items-center gap-0.5"
-            >
-              <span>View all</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {skills.map(skill => (
-              <div key={skill.id} className="p-2.5 bg-lockin-secondary/50 rounded-xl border border-lockin-border/80">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-extrabold text-lockin-dark">{skill.name}</span>
-                  <span className="text-[11px] font-bold text-lockin-muted">Lv. {skill.level}</span>
-                </div>
-                <XPProgressBar progressPercent={skill.progressPercent} barColor="bg-lockin-red" height={6} showPercentText />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* RECENT ACHIEVEMENT & RECENT ACTIVITY (5 cols) */}
-        <div className="lg:col-span-5 space-y-4 animate-card-pop stagger-8">
-
-          {/* Recent Achievement Card */}
+          {/* 3. Recent Achievement Card */}
           {achievements.length > 0 && (
-            <div className="stationery-card p-4 bg-gradient-to-r from-lockin-card to-lockin-cream/30">
+            <div className="stationery-card p-4 bg-gradient-to-r from-lockin-card to-lockin-cream/30 animate-card-pop stagger-6">
               <span className="text-[10px] font-black tracking-wider text-lockin-muted uppercase">RECENT ACHIEVEMENT</span>
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-2.5">
@@ -296,8 +176,8 @@ export const DashboardView: React.FC = () => {
             </div>
           )}
 
-          {/* Recent Activity List Card */}
-          <div className="stationery-card p-4">
+          {/* 4. Recent Activity List Card */}
+          <div className="stationery-card p-4 animate-card-pop stagger-7">
             <h4 className="text-[10px] font-black tracking-wider text-lockin-muted uppercase mb-2">RECENT ACTIVITY</h4>
             <div className="space-y-2">
               {activities.slice(0, 3).map((act: ActivityItem) => (

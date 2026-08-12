@@ -1,8 +1,9 @@
 import type { UserProfile, Quest, Skill, Habit, SleepLog, GamingLog, ActivityItem } from '../types';
 import { INITIAL_ACHIEVEMENTS } from './achievements';
+import { getOSUsername } from '../utils/getOSUsername';
 
 export const DEFAULT_USER_PROFILE: UserProfile = {
-  name: 'Bumi',
+  name: getOSUsername(),
   equippedTitle: 'Beginner',
   level: 1,
   rank: 'F',
