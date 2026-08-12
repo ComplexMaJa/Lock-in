@@ -3,13 +3,12 @@ import { useApp } from '../../context/AppContext';
 import type { ActivityItem } from '../../types';
 import { getFocusNowQuest } from '../../utils/priority';
 import { XPProgressBar } from '../common/XPProgressBar';
-import { CircularProgress } from '../common/CircularProgress';
 import { Badge } from '../common/Badge';
+import { StreakCalendar } from '../common/StreakCalendar';
 import { SparkleDoodle } from '../common/Doodle';
 import heroImg from '../../assets/hero.png';
 import bannerImg from '../../assets/banner.png';
 import {
-  Flame,
   Zap,
   Gift,
   ChevronRight,
@@ -183,32 +182,9 @@ export const DashboardView: React.FC = () => {
             </div>
           </div>
 
-          {/* Streak & Today's Score Row */}
-          <div className="grid grid-cols-2 gap-3 animate-card-pop stagger-4">
-            {/* Streak Card */}
-            <div className="stationery-card p-4 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-1.5 text-lockin-red">
-                  <Flame className="w-4.5 h-4.5 fill-lockin-red animate-pulse" />
-                  <span className="text-lg font-black text-lockin-dark">{userProfile.streakDays}</span>
-                </div>
-                <p className="text-[10px] font-black tracking-wider text-lockin-muted uppercase mt-0.5">DAY STREAK</p>
-              </div>
-              <p className="text-[10px] font-semibold text-lockin-muted mt-2">
-                "Keep the run alive."
-              </p>
-            </div>
-
-            {/* Today's Score Card */}
-            <div className="stationery-card p-3 flex flex-col items-center justify-center">
-              <CircularProgress
-                value={userProfile.todayScore}
-                grade={userProfile.todayGrade}
-                size={70}
-                strokeWidth={6}
-                label="TODAY'S SCORE"
-              />
-            </div>
+          {/* Horizontal Streak Calendar Card */}
+          <div className="stationery-card p-4 animate-card-pop stagger-4">
+            <StreakCalendar />
           </div>
 
           {/* Next Level Reward Preview Card */}

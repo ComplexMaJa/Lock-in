@@ -178,7 +178,7 @@ export const FocusView: React.FC = () => {
 
       {/* 2. COMPACT SEARCHABLE DROPDOWN QUEST SELECTOR */}
       {!isSessionRunningOrPaused && (
-        <div className="relative max-w-md mx-auto animate-card-pop stagger-2" ref={dropdownRef}>
+        <div className={`relative max-w-md mx-auto animate-card-pop stagger-2 ${isDropdownOpen ? 'z-50' : 'z-10'}`} ref={dropdownRef}>
           {/* Dropdown Toggle Button */}
           <button
             onClick={() => setIsDropdownOpen(prev => !prev)}
@@ -208,7 +208,7 @@ export const FocusView: React.FC = () => {
 
           {/* Dropdown Popup Menu with Search Bar */}
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 mt-2 z-40 bg-white rounded-3xl p-3 shadow-2xl border-2 border-lockin-soft-pink space-y-2 animate-scaleUp">
+            <div className="absolute top-full left-0 right-0 mt-2 z-[100] bg-white rounded-3xl p-3 shadow-2xl border-2 border-lockin-soft-pink space-y-2 animate-scaleUp">
               {/* Search Bar Input */}
               <div className="relative flex items-center">
                 <Search className="w-4 h-4 text-lockin-muted absolute left-3 pointer-events-none" />
@@ -271,7 +271,7 @@ export const FocusView: React.FC = () => {
       )}
 
       {/* 3. CENTER CIRCULAR PROGRESS TIMER RING */}
-      <div className="relative flex items-center justify-center my-2 animate-card-pop stagger-3">
+      <div className="relative flex items-center justify-center my-2 animate-card-pop stagger-3 z-0">
         <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
             {/* Background Circle Track */}
