@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import type { ActivityItem } from '../../types';
 import { getFocusNowQuest } from '../../utils/priority';
 import { XPProgressBar } from '../common/XPProgressBar';
 import { CircularProgress } from '../common/CircularProgress';
@@ -301,7 +302,7 @@ export const DashboardView: React.FC = () => {
           <div className="stationery-card p-4">
             <h4 className="text-[10px] font-black tracking-wider text-lockin-muted uppercase mb-2">RECENT ACTIVITY</h4>
             <div className="space-y-2">
-              {activities.slice(0, 3).map(act => (
+              {activities.slice(0, 3).map((act: ActivityItem) => (
                 <div key={act.id} className="flex items-center justify-between text-xs font-medium pb-1.5 border-b border-lockin-border/50 last:border-0 last:pb-0">
                   <div className="flex items-center gap-2 truncate">
                     <span className="w-1.5 h-1.5 rounded-full bg-lockin-red shrink-0" />

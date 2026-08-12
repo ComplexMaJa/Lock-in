@@ -38,6 +38,31 @@ export function playClickSound(enabled: boolean = true) {
   osc.stop(ctx.currentTime + 0.05);
 }
 
+export function playWarningSound(enabled: boolean = true) {
+  if (!enabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  // Double cute rejection buzz tone
+  const notes = [320, 240];
+  notes.forEach((freq, idx) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+
+    gain.gain.setValueAtTime(0.12, ctx.currentTime + idx * 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.12);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(ctx.currentTime + idx * 0.08);
+    osc.stop(ctx.currentTime + idx * 0.08 + 0.12);
+  });
+}
+
 export function playQuestCompleteSound(enabled: boolean = true) {
   if (!enabled) return;
   const ctx = getAudioContext();

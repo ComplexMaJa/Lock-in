@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import type { GamingLogEntry } from '../../types';
 import { Gamepad2, Plus } from 'lucide-react';
 
 export const GamingView: React.FC = () => {
@@ -88,7 +89,7 @@ export const GamingView: React.FC = () => {
       {/* Entries List */}
       <div className="space-y-2">
         <h4 className="text-xs font-black tracking-wider text-lockin-muted uppercase">TODAY'S LOGGED GAMES</h4>
-        {gamingLog.entries.map(entry => (
+        {gamingLog.entries.map((entry: GamingLogEntry) => (
           <div key={entry.id} className="stationery-card p-3.5 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <Gamepad2 className="w-4 h-4 text-lockin-red" />

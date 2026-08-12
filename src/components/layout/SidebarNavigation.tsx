@@ -12,7 +12,8 @@ import {
   Moon,
   Gamepad2,
   Settings,
-  User
+  User,
+  Lock
 } from 'lucide-react';
 
 interface NavConfig {
@@ -123,7 +124,12 @@ export const SidebarNavigation: React.FC<{ onNavigate?: () => void }> = ({ onNav
 
                 {/* Label */}
                 {!isSidebarCollapsed && (
-                  <span className="truncate flex-1 text-left">{item.label}</span>
+                  <span className="truncate flex-1 text-left flex items-center gap-1.5">
+                    <span>{item.label}</span>
+                    {activeTab === 'Focus' && item.tab !== 'Focus' && (
+                      <Lock className="w-3 h-3 text-lockin-muted/50 inline-block" />
+                    )}
+                  </span>
                 )}
 
                 {/* Badge when expanded */}

@@ -116,4 +116,33 @@ export interface ActivityItem {
   timestamp: string;
 }
 
+export type FocusSessionState = 'IDLE' | 'READY' | 'RUNNING' | 'PAUSED' | 'READY_TO_CLAIM' | 'COMPLETED' | 'CANCELLED';
+
+export interface FocusSession {
+  id: string;
+  questId: string;
+  questTitle: string;
+  plannedDurationMin: number;
+  startedAt: number; // Date.now() timestamp
+  pausedAt: number | null; // Date.now() timestamp when paused
+  totalPausedMs: number;
+  state: FocusSessionState;
+  rewardXp: number;
+  bonusXp: number;
+  rewardClaimed: boolean;
+  createdAt: number;
+  completedAt?: number;
+  cancelledAt?: number;
+  activeDurationMin?: number;
+}
+
+export interface XPTransaction {
+  id: string;
+  source: 'focus_session' | 'quest' | 'habit' | 'achievement' | 'sleep' | 'gaming';
+  sourceId: string;
+  amount: number;
+  createdAt: number;
+}
+
 export type ActiveTab = 'Home' | 'Quests' | 'Focus' | 'Habits' | 'Skills' | 'Achievements' | 'Progress' | 'Sleep' | 'Gaming' | 'Profile' | 'Settings';
+

@@ -8,7 +8,9 @@ import type {
   SleepLog,
   GamingLog,
   ActivityItem,
-  ActiveTab
+  ActiveTab,
+  FocusSession,
+  XPTransaction
 } from '../types';
 import {
   DEFAULT_USER_PROFILE,
@@ -20,7 +22,13 @@ import {
   DEFAULT_ACTIVITIES,
   INITIAL_ACHIEVEMENTS
 } from '../constants/defaultState';
-import { playQuestCompleteSound, playLevelUpSound, playAchievementSound, playClickSound } from '../utils/sound';
+import {
+  playQuestCompleteSound,
+  playLevelUpSound,
+  playAchievementSound,
+  playClickSound,
+  playWarningSound
+} from '../utils/sound';
 
 interface AppContextType {
   userProfile: UserProfile;
@@ -31,6 +39,9 @@ interface AppContextType {
   sleepLog: SleepLog;
   gamingLog: GamingLog;
   activities: ActivityItem[];
+  focusSession: FocusSession | null;
+  focusHistory: FocusSession[];
+  processedTransactionIds: string[];
   soundEnabled: boolean;
   viewportMode: 'desktop' | 'mobile-preview';
   activeTab: ActiveTab;
@@ -40,14 +51,18 @@ interface AppContextType {
   showLevelUpModal: { show: boolean; oldLevel: number; newLevel: number } | null;
   showAchievementModal: Achievement | null;
   showAddQuestModal: boolean;
+  showFocusWarningModal: { show: boolean; pendingTab: ActiveTab | null } | null;
   
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
+  setActiveFocusQuest: (quest: Quest | null) => void;
   setViewportMode: (mode: 'desktop' | 'mobile-preview') => void;
   setSoundEnabled: (enabled: boolean) => void;
   setIsSidebarCollapsed: (collapsed: boolean) => void;
   toggleSidebarCollapsed: () => void;
   setIsMobileDrawerOpen: (open: boolean) => void;
+  closeFocusWarningModal: () => void;
+  confirmAbandonFocus: () => void;
   completeQuest: (questId: string) => void;
   addQuest: (questData: Partial<Quest>) => void;
   deleteQuest: (questId: string) => void;
@@ -55,8 +70,13 @@ interface AppContextType {
   logSleep: (log: Partial<SleepLog>) => void;
   addGamingEntry: (game: string, durationMinutes: number) => void;
   equipTitle: (title: string) => void;
-  startFocusSession: (quest?: Quest) => void;
-  completeFocusSession: (minutes: number, bonusXp?: number) => void;
+  startFocusSession: (quest?: Quest, durationMin?: number) => void;
+  pauseFocusSession: () => void;
+  resumeFocusSession: () => void;
+  cancelFocusSession: () => void;
+  finishFocusSession: () => void;
+  claimFocusReward: () => void;
+  awardXPTransaction: (source: XPTransaction['source'], sourceId: string, amount: number, category?: string) => boolean;
   resetToDefaultState: () => void;
   setShowAddQuestModal: (show: boolean) => void;
   closeLevelUpModal: () => void;
@@ -163,6 +183,39 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
+  const [focusSession, setFocusSession] = useState<FocusSession | null>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_focus_session`);
+      if (saved) {
+        const parsed: FocusSession = JSON.parse(saved);
+        if (parsed.state === 'RUNNING' || parsed.state === 'PAUSED' || parsed.state === 'READY_TO_CLAIM') {
+          return parsed;
+        }
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [focusHistory, setFocusHistory] = useState<FocusSession[]>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_focus_history`);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [processedTransactionIds, setProcessedTransactionIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_processed_txs`);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [soundEnabled, setSoundEnabledState] = useState<boolean>(true);
   const [viewportMode, setViewportMode] = useState<'desktop' | 'mobile-preview'>('desktop');
   const [activeTab, setActiveTabState] = useState<ActiveTab>('Home');
@@ -179,6 +232,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [showLevelUpModal, setShowLevelUpModal] = useState<{ show: boolean; oldLevel: number; newLevel: number } | null>(null);
   const [showAchievementModal, setShowAchievementModal] = useState<Achievement | null>(null);
   const [showAddQuestModal, setShowAddQuestModal] = useState<boolean>(false);
+  const [showFocusWarningModal, setShowFocusWarningModal] = useState<{ show: boolean; pendingTab: ActiveTab | null } | null>(null);
+
+  const setActiveTab = (tab: ActiveTab) => {
+    const isImmersiveLocked = focusSession && (focusSession.state === 'RUNNING' || focusSession.state === 'PAUSED' || focusSession.state === 'READY_TO_CLAIM');
+    if (isImmersiveLocked && tab !== 'Focus') {
+      playWarningSound(soundEnabled);
+      setShowFocusWarningModal({ show: true, pendingTab: tab });
+      return;
+    }
+    playClickSound(soundEnabled);
+    setActiveTabState(tab);
+  };
+
+  const closeFocusWarningModal = () => {
+    playClickSound(soundEnabled);
+    setShowFocusWarningModal(null);
+  };
+
+  const confirmAbandonFocus = () => {
+    if (showFocusWarningModal?.pendingTab) {
+      setActiveTabState(showFocusWarningModal.pendingTab);
+      setActiveFocusQuest(null);
+    }
+    setShowFocusWarningModal(null);
+  };
 
   // Save to localStorage on state updates
   useEffect(() => {
@@ -266,11 +344,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         unlockAchievement(ach.id);
       }
     });
-  };
-
-  const setActiveTab = (tab: ActiveTab) => {
-    playClickSound(soundEnabled);
-    setActiveTabState(tab);
   };
 
   const setSoundEnabled = (enabled: boolean) => {
@@ -480,48 +553,211 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setUserProfile(prev => ({ ...prev, equippedTitle: title }));
   };
 
-  const startFocusSession = (quest?: Quest) => {
-    playClickSound(soundEnabled);
-    if (quest) {
-      setActiveFocusQuest(quest);
-    } else {
-      const firstUncompleted = quests.find(q => !q.completed);
-      setActiveFocusQuest(firstUncompleted || null);
-    }
-    setActiveTabState('Focus');
-  };
-
-  const completeFocusSession = (minutes: number, bonusXp: number = 10) => {
-    const baseXp = Math.round(minutes * 1.5);
-    const totalEarned = baseXp + bonusXp;
-
-    playQuestCompleteSound(soundEnabled);
-    addXP(totalEarned, activeFocusQuest?.category || 'Discipline');
-
-    if (activeFocusQuest) {
-      completeQuest(activeFocusQuest.id);
+  const awardXPTransaction = (
+    _source: XPTransaction['source'],
+    sourceId: string,
+    amount: number,
+    category?: string
+  ): boolean => {
+    if (processedTransactionIds.includes(sourceId)) {
+      console.warn(`[XP Engine] Transaction ${sourceId} already processed. Skipping duplicate reward.`);
+      return false;
     }
 
-    const newFocusHours = Number((userProfile.totalFocusHoursLifetime + minutes / 60).toFixed(1));
-    setUserProfile(prev => {
-      const updated = {
-        ...prev,
-        totalFocusHoursLifetime: newFocusHours,
-      };
-      evaluateAchievements(updated, quests, habits, achievements);
+    setProcessedTransactionIds(prev => {
+      const updated = [...prev, sourceId];
+      try {
+        localStorage.setItem(`${STORAGE_KEY}_processed_txs`, JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to save processed txs', e);
+      }
       return updated;
     });
 
-    recalculateTodayScore(quests, habits, newFocusHours);
+    addXP(amount, category);
+    return true;
+  };
 
-    const newActivity: ActivityItem = {
-      id: Date.now().toString(),
-      text: `Focus session: ${minutes} minutes completed`,
-      type: 'focus',
-      xpEarned: totalEarned,
-      timestamp: 'Just now',
+  const startFocusSession = (quest?: Quest, durationMin?: number) => {
+    playClickSound(soundEnabled);
+
+    // If session already active, just switch tab to Focus
+    if (focusSession && (focusSession.state === 'RUNNING' || focusSession.state === 'PAUSED' || focusSession.state === 'READY_TO_CLAIM')) {
+      setActiveTabState('Focus');
+      return;
+    }
+
+    const targetQuest = quest || activeFocusQuest || quests.find(q => !q.completed) || null;
+    if (targetQuest) setActiveFocusQuest(targetQuest);
+
+    const duration = durationMin || targetQuest?.durationMin || 25;
+    const rewardXp = targetQuest?.xp || 50;
+
+    const newSession: FocusSession = {
+      id: `focus_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      questId: targetQuest?.id || 'general',
+      questTitle: targetQuest?.title || 'General Focus Session',
+      plannedDurationMin: duration,
+      startedAt: Date.now(),
+      pausedAt: null,
+      totalPausedMs: 0,
+      state: 'RUNNING',
+      rewardXp,
+      bonusXp: 10,
+      rewardClaimed: false,
+      createdAt: Date.now(),
     };
-    setActivities(prev => [newActivity, ...prev.slice(0, 15)]);
+
+    setFocusSession(newSession);
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_focus_session`, JSON.stringify(newSession));
+    } catch (e) {
+      console.error('Failed to save focus session', e);
+    }
+
+    setActiveTabState('Focus');
+  };
+
+  const pauseFocusSession = () => {
+    if (!focusSession || focusSession.state !== 'RUNNING') return;
+    playClickSound(soundEnabled);
+    const updated: FocusSession = {
+      ...focusSession,
+      state: 'PAUSED',
+      pausedAt: Date.now(),
+    };
+    setFocusSession(updated);
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_focus_session`, JSON.stringify(updated));
+    } catch (e) {
+      console.error('Failed to save focus session', e);
+    }
+  };
+
+  const resumeFocusSession = () => {
+    if (!focusSession || focusSession.state !== 'PAUSED') return;
+    playClickSound(soundEnabled);
+    const addedPaused = focusSession.pausedAt ? Date.now() - focusSession.pausedAt : 0;
+    const updated: FocusSession = {
+      ...focusSession,
+      state: 'RUNNING',
+      pausedAt: null,
+      totalPausedMs: focusSession.totalPausedMs + addedPaused,
+    };
+    setFocusSession(updated);
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_focus_session`, JSON.stringify(updated));
+    } catch (e) {
+      console.error('Failed to save focus session', e);
+    }
+  };
+
+  const finishFocusSession = () => {
+    if (!focusSession || (focusSession.state !== 'RUNNING' && focusSession.state !== 'PAUSED')) return;
+    playAchievementSound(soundEnabled);
+    const updated: FocusSession = {
+      ...focusSession,
+      state: 'READY_TO_CLAIM',
+      completedAt: Date.now(),
+    };
+    setFocusSession(updated);
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_focus_session`, JSON.stringify(updated));
+    } catch (e) {
+      console.error('Failed to save focus session', e);
+    }
+  };
+
+  const cancelFocusSession = () => {
+    if (!focusSession) return;
+    playClickSound(soundEnabled);
+
+    const now = Date.now();
+    const elapsedTimeMs = focusSession.pausedAt
+      ? focusSession.pausedAt - focusSession.startedAt - focusSession.totalPausedMs
+      : now - focusSession.startedAt - focusSession.totalPausedMs;
+    const activeMins = Math.max(0, Math.round(elapsedTimeMs / 60000));
+
+    const cancelledSession: FocusSession = {
+      ...focusSession,
+      state: 'CANCELLED',
+      cancelledAt: now,
+      activeDurationMin: activeMins,
+      rewardXp: 0,
+      bonusXp: 0,
+    };
+
+    setFocusHistory(prev => [cancelledSession, ...prev]);
+    setFocusSession(null);
+    try {
+      localStorage.removeItem(`${STORAGE_KEY}_focus_session`);
+      localStorage.setItem(`${STORAGE_KEY}_focus_history`, JSON.stringify([cancelledSession, ...focusHistory]));
+    } catch (e) {
+      console.error('Failed to update focus history', e);
+    }
+  };
+
+  const claimFocusReward = () => {
+    if (!focusSession || focusSession.state !== 'READY_TO_CLAIM' || focusSession.rewardClaimed) return;
+    playQuestCompleteSound(soundEnabled);
+
+    const totalReward = focusSession.rewardXp + focusSession.bonusXp;
+    const category = quests.find(q => q.id === focusSession.questId)?.category || 'Discipline';
+
+    const awarded = awardXPTransaction('focus_session', focusSession.id, totalReward, category);
+
+    if (awarded) {
+      const hoursAdded = focusSession.plannedDurationMin / 60;
+      const updatedTotalHours = parseFloat((userProfile.totalFocusHoursLifetime + hoursAdded).toFixed(1));
+
+      setUserProfile(prev => ({
+        ...prev,
+        totalFocusHoursLifetime: updatedTotalHours,
+      }));
+
+      if (focusSession.questId) {
+        setQuests(prev =>
+          prev.map(q => {
+            if (q.id === focusSession.questId) {
+              const currentProgress = q.progressPercent || 0;
+              const newProgress = Math.min(100, Math.round(currentProgress + (focusSession.plannedDurationMin / q.durationMin) * 100));
+              return { ...q, progressPercent: newProgress };
+            }
+            return q;
+          })
+        );
+      }
+
+      const newActivity: ActivityItem = {
+        id: Date.now().toString(),
+        text: `Completed ${focusSession.plannedDurationMin}m focus: ${focusSession.questTitle}`,
+        type: 'focus',
+        xpEarned: totalReward,
+        timestamp: 'Just now',
+      };
+      setActivities(prev => [newActivity, ...prev.slice(0, 15)]);
+
+      const completedSession: FocusSession = {
+        ...focusSession,
+        state: 'COMPLETED',
+        rewardClaimed: true,
+        completedAt: Date.now(),
+      };
+
+      const updatedHistory = [completedSession, ...focusHistory];
+      setFocusHistory(updatedHistory);
+      setFocusSession(null);
+
+      try {
+        localStorage.removeItem(`${STORAGE_KEY}_focus_session`);
+        localStorage.setItem(`${STORAGE_KEY}_focus_history`, JSON.stringify(updatedHistory));
+      } catch (e) {
+        console.error('Failed to update focus storage', e);
+      }
+
+      evaluateAchievements(userProfile, quests, habits, achievements);
+      recalculateTodayScore(quests, habits, updatedTotalHours);
+    }
   };
 
   const unlockAchievement = (id: string) => {
@@ -569,6 +805,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         sleepLog,
         gamingLog,
         activities,
+        focusSession,
+        focusHistory,
+        processedTransactionIds,
         soundEnabled,
         viewportMode,
         activeTab,
@@ -578,12 +817,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         showLevelUpModal,
         showAchievementModal,
         showAddQuestModal,
+        showFocusWarningModal,
         setActiveTab,
+        setActiveFocusQuest,
         setViewportMode,
         setSoundEnabled,
         setIsSidebarCollapsed,
         toggleSidebarCollapsed,
         setIsMobileDrawerOpen,
+        closeFocusWarningModal,
+        confirmAbandonFocus,
         completeQuest,
         addQuest,
         deleteQuest,
@@ -592,7 +835,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addGamingEntry,
         equipTitle,
         startFocusSession,
-        completeFocusSession,
+        pauseFocusSession,
+        resumeFocusSession,
+        cancelFocusSession,
+        finishFocusSession,
+        claimFocusReward,
+        awardXPTransaction,
         resetToDefaultState,
         setShowAddQuestModal,
         closeLevelUpModal,

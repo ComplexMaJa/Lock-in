@@ -22,10 +22,30 @@ import { SettingsView } from './components/views/SettingsView';
 import { LevelUpModal } from './components/modals/LevelUpModal';
 import { AchievementModal } from './components/modals/AchievementModal';
 import { AddQuestModal } from './components/modals/AddQuestModal';
+import { FocusWarningModal } from './components/modals/FocusWarningModal';
 import { MobileDrawer } from './components/layout/MobileDrawer';
 
 const AppContent: React.FC = () => {
-  const { activeTab, viewportMode } = useApp();
+  const { activeTab, viewportMode, focusSession, setActiveTab } = useApp();
+
+  const isSessionActive = Boolean(
+    focusSession &&
+    (focusSession.state === 'RUNNING' || focusSession.state === 'PAUSED' || focusSession.state === 'READY_TO_CLAIM')
+  );
+
+  // Intercept browser Back button when focus session is active
+  React.useEffect(() => {
+    if (isSessionActive) {
+      window.history.pushState(null, '', window.location.href);
+      const handlePopState = (e: PopStateEvent) => {
+        e.preventDefault();
+        window.history.pushState(null, '', window.location.href);
+        setActiveTab('Focus');
+      };
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, [isSessionActive, setActiveTab]);
 
   const renderActiveView = () => {
     switch (activeTab) {
@@ -81,7 +101,7 @@ const AppContent: React.FC = () => {
           <div className="flex-1 mt-2">{renderActiveView()}</div>
         </main>
 
-        {/* Mobile Navigation (Shown on mobile view or mobile screen sizes) */}
+        {/* Mobile Navigation */}
         {(isMobileMode || typeof window !== 'undefined') && (
           <div className={isMobileMode ? 'block' : 'block lg:hidden'}>
             <MobileNav />
@@ -99,6 +119,7 @@ const AppContent: React.FC = () => {
       <LevelUpModal />
       <AchievementModal />
       <AddQuestModal />
+      <FocusWarningModal />
     </div>
   );
 };
