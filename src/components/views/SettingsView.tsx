@@ -6,8 +6,8 @@ export const SettingsView: React.FC = () => {
   const { soundEnabled, setSoundEnabled, resetToDefaultState } = useApp();
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn max-w-2xl mx-auto select-none">
-      <div>
+    <div className="space-y-6 pb-12 animate-page-pop max-w-2xl mx-auto select-none">
+      <div className="animate-card-pop stagger-1">
         <h2 className="text-2xl font-extrabold text-lockin-dark">App Settings</h2>
         <p className="text-xs text-lockin-muted mt-0.5">
           Configure application preferences, audio sound effects, and data storage.
@@ -15,7 +15,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* Sound Effects Card */}
-      <div className="stationery-card p-6 flex items-center justify-between">
+      <div className="stationery-card p-6 flex items-center justify-between animate-card-pop stagger-2">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-lockin-soft-pink/30 text-lockin-red rounded-2xl border border-lockin-soft-pink">
             {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}

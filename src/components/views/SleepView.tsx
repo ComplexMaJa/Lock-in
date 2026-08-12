@@ -21,16 +21,16 @@ export const SleepView: React.FC = () => {
   const percent = Math.min(Math.round((sleepLog.durationHours / sleepLog.targetHours) * 100), 100);
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn max-w-2xl mx-auto select-none">
-      <div>
+    <div className="space-y-6 pb-12 animate-page-pop max-w-2xl mx-auto select-none">
+      <div className="animate-card-pop stagger-1">
         <h2 className="text-2xl font-extrabold text-lockin-dark">Sleep & Recovery</h2>
         <p className="text-xs text-lockin-muted mt-0.5">
-          Quality sleep recharges your daily focus energy and powers up the Recovery skill.
+          Rest is essential for your RPG stamina and daily score.
         </p>
       </div>
 
       {/* Main Sleep Card */}
-      <div className="stationery-card p-6 bg-gradient-to-br from-white via-white to-lockin-blue/20 border-2 border-lockin-blue">
+      <div className="stationery-card p-6 bg-gradient-to-br from-white via-white to-lockin-blue/20 border-2 border-lockin-blue animate-card-pop stagger-2">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-lockin-blue/40 text-[#2B7A9E] rounded-2xl border border-lockin-blue">

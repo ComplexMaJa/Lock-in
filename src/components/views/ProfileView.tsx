@@ -22,9 +22,9 @@ export const ProfileView: React.FC = () => {
   const [showTitleSelector, setShowTitleSelector] = useState(false);
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn max-w-3xl mx-auto select-none">
+    <div className="space-y-6 pb-12 animate-page-pop max-w-3xl mx-auto select-none">
       {/* Top Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between animate-card-pop stagger-1">
         <div>
           <h2 className="text-2xl font-extrabold text-lockin-dark">Character Sheet</h2>
           <p className="text-xs text-lockin-muted mt-0.5">
@@ -41,7 +41,7 @@ export const ProfileView: React.FC = () => {
       </div>
 
       {/* Main RPG Character Card */}
-      <div className="stationery-card p-6 sm:p-8 bg-gradient-to-b from-white via-white to-lockin-soft-pink/10 text-center relative overflow-hidden">
+      <div className="stationery-card p-6 sm:p-8 bg-gradient-to-b from-white via-white to-lockin-soft-pink/10 text-center relative overflow-hidden animate-card-pop stagger-2">
         {/* Decorative Sparkles */}
         <div className="absolute top-4 left-6">
           <SparkleDoodle color="#F8E7A8" className="w-6 h-6 animate-pulse" />

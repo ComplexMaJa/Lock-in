@@ -24,8 +24,8 @@ export const GamingView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn max-w-2xl mx-auto select-none">
-      <div>
+    <div className="space-y-6 pb-12 animate-page-pop max-w-2xl mx-auto select-none">
+      <div className="animate-card-pop stagger-1">
         <h2 className="text-2xl font-extrabold text-lockin-dark">Intentional Gaming Tracker</h2>
         <p className="text-xs text-lockin-muted mt-0.5">
           "Intentional gaming, not eliminating gaming." Enjoy gaming guilt-free by staying in balance.
@@ -33,7 +33,7 @@ export const GamingView: React.FC = () => {
       </div>
 
       {/* Overview Cards */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3 animate-card-pop stagger-2">
         <div className="stationery-card p-4 text-center">
           <span className="text-[10px] font-black tracking-wider text-lockin-muted uppercase">GAMING TODAY</span>
           <p className="text-xl font-extrabold text-lockin-dark mt-1">{formatHrsMins(gamingLog.todayTotalMinutes)}</p>

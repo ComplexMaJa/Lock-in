@@ -33,14 +33,14 @@ export const DashboardView: React.FC = () => {
   const totalTodayCount = quests.length;
 
   return (
-    <div className="space-y-4 pb-4 animate-fadeIn select-none">
+    <div className="space-y-5 pb-12 animate-page-pop select-none">
       {/* Top Main Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
         {/* Left Dominant Column (7 cols): FOCUS NOW + TODAY'S QUESTS */}
         <div className="lg:col-span-7 space-y-4">
           
           {/* FOCUS NOW Card - Compact & Punchy */}
-          <div className="stationery-card p-5 sm:p-6 relative overflow-hidden bg-gradient-to-br from-white via-white to-lockin-soft-pink/15 border-2 border-lockin-soft-pink soft-glow-pink shadow-md">
+          <div className="stationery-card p-5 sm:p-6 relative overflow-hidden bg-gradient-to-br from-white via-white to-lockin-soft-pink/15 border-2 border-lockin-soft-pink soft-glow-pink shadow-md animate-card-pop stagger-1">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative z-10">
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-2">
@@ -87,8 +87,8 @@ export const DashboardView: React.FC = () => {
           </div>
 
           {/* TODAY'S QUESTS Card */}
-          <div className="stationery-card p-4 sm:p-5">
-            <div className="flex items-center justify-between mb-3">
+          <div className="stationery-card p-4.5 sm:p-5 animate-card-pop stagger-2">
+            <div className="flex items-center justify-between mb-3 border-b border-lockin-border/60 pb-3">
               <div>
                 <h4 className="text-[11px] font-black tracking-wider text-lockin-muted uppercase">TODAY'S QUESTS</h4>
                 <div className="flex items-center gap-2 mt-0.5">
@@ -148,7 +148,7 @@ export const DashboardView: React.FC = () => {
         <div className="lg:col-span-5 space-y-4">
 
           {/* Level & Rank Card */}
-          <div className="stationery-card p-4.5 sm:p-5">
+          <div className="stationery-card p-4.5 sm:p-5 animate-card-pop stagger-3">
             <div className="grid grid-cols-2 gap-3 divide-x divide-lockin-border">
               {/* LEVEL */}
               <div className="pr-2">
@@ -184,7 +184,7 @@ export const DashboardView: React.FC = () => {
           </div>
 
           {/* Streak & Today's Score Row */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 animate-card-pop stagger-4">
             {/* Streak Card */}
             <div className="stationery-card p-4 flex flex-col justify-between">
               <div>
@@ -212,7 +212,7 @@ export const DashboardView: React.FC = () => {
           </div>
 
           {/* Next Level Reward Preview Card */}
-          <div className="stationery-card p-4 bg-gradient-to-r from-white via-white to-lockin-cream/30 border border-lockin-border">
+          <div className="stationery-card p-4 bg-gradient-to-r from-white via-white to-lockin-cream/30 border border-lockin-border animate-card-pop stagger-5">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-black tracking-wider text-lockin-muted uppercase">NEXT LEVEL REWARD</span>
@@ -234,7 +234,7 @@ export const DashboardView: React.FC = () => {
           </div>
 
           {/* Aesthetic Banner Card */}
-          <div className="stationery-card overflow-hidden p-0 relative border-2 border-lockin-soft-pink/60 shadow-sm group hover:border-lockin-red transition-all">
+          <div className="stationery-card overflow-hidden p-0 relative border-2 border-lockin-soft-pink/60 shadow-sm group hover:border-lockin-red transition-all animate-card-pop stagger-6">
             <img
               src={bannerImg}
               alt="LOCK-IN RPG Banner"
@@ -249,7 +249,7 @@ export const DashboardView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
 
         {/* SKILL PROGRESSION Card (7 cols) */}
-        <div className="lg:col-span-7 stationery-card p-4.5 sm:p-5">
+        <div className="lg:col-span-7 stationery-card p-4.5 sm:p-5 animate-card-pop stagger-7">
           <div className="flex items-center justify-between mb-3">
             <h4 className="text-[11px] font-black tracking-wider text-lockin-muted uppercase">SKILL PROGRESSION</h4>
             <button
@@ -275,7 +275,7 @@ export const DashboardView: React.FC = () => {
         </div>
 
         {/* RECENT ACHIEVEMENT & RECENT ACTIVITY (5 cols) */}
-        <div className="lg:col-span-5 space-y-4">
+        <div className="lg:col-span-5 space-y-4 animate-card-pop stagger-8">
 
           {/* Recent Achievement Card */}
           {achievements.length > 0 && (

@@ -7,15 +7,15 @@ export const HabitsView: React.FC = () => {
   const { habits, toggleHabit } = useApp();
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn select-none">
-      <div>
+    <div className="space-y-6 pb-12 animate-page-pop select-none">
+      <div className="animate-card-pop stagger-1">
         <h2 className="text-2xl font-extrabold text-lockin-dark">Daily Habits</h2>
         <p className="text-xs text-lockin-muted mt-0.5">
           Build long-term RPG discipline by keeping your habit streaks alive.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-card-pop stagger-2">
         {habits.map(habit => (
           <div
             key={habit.id}

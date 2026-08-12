@@ -34,9 +34,9 @@ export const ProgressView: React.FC = () => {
   const pathD = points.reduce((acc, p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `${acc} L ${p.x} ${p.y}`), '');
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn select-none">
+    <div className="space-y-6 pb-12 animate-page-pop select-none">
       {/* Top Header & Timeframe Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-card-pop stagger-1">
         <div>
           <h2 className="text-2xl font-extrabold text-lockin-dark">Progress & Analytics</h2>
           <p className="text-xs text-lockin-muted mt-0.5">

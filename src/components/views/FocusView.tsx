@@ -150,10 +150,10 @@ export const FocusView: React.FC = () => {
   const isSessionRunningOrPaused = focusSession && (focusSession.state === 'RUNNING' || focusSession.state === 'PAUSED');
 
   return (
-    <div className="space-y-6 pb-8 animate-fadeIn select-none max-w-2xl mx-auto">
+    <div className="space-y-6 pb-8 animate-page-pop select-none max-w-2xl mx-auto">
       
       {/* 1. TOP HEADER & DYNAMIC QUEST TITLE */}
-      <div className="text-center space-y-2">
+      <div className="text-center space-y-2 animate-card-pop stagger-1">
         {/* FOCUS MODE Pill */}
         <div className="inline-flex items-center gap-1.5 px-4 py-1 bg-lockin-soft-pink/40 text-lockin-red font-black text-xs rounded-full border border-lockin-soft-pink">
           <span className="uppercase tracking-widest text-[11px]">FOCUS MODE</span>
@@ -178,7 +178,7 @@ export const FocusView: React.FC = () => {
 
       {/* 2. COMPACT SEARCHABLE DROPDOWN QUEST SELECTOR */}
       {!isSessionRunningOrPaused && (
-        <div className="relative max-w-md mx-auto" ref={dropdownRef}>
+        <div className="relative max-w-md mx-auto animate-card-pop stagger-2" ref={dropdownRef}>
           {/* Dropdown Toggle Button */}
           <button
             onClick={() => setIsDropdownOpen(prev => !prev)}
@@ -271,7 +271,7 @@ export const FocusView: React.FC = () => {
       )}
 
       {/* 3. CENTER CIRCULAR PROGRESS TIMER RING */}
-      <div className="relative flex items-center justify-center my-2">
+      <div className="relative flex items-center justify-center my-2 animate-card-pop stagger-3">
         <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
             {/* Background Circle Track */}
@@ -317,92 +317,94 @@ export const FocusView: React.FC = () => {
         <SparkleDoodle color="#F7C6CE" className="absolute bottom-4 left-12 w-5 h-5 animate-bounce-gentle" />
       </div>
 
-      {/* 4. BUTTONS ROW: RESET, START/PAUSE/RESUME, COMPLETE/CLAIM */}
-      <div className="flex items-center justify-center gap-3 max-w-sm mx-auto">
-        {/* Cancel Session "X" Button with Pop-up Confirmation Indicator */}
-        <button
-          onClick={() => {
-            if (focusSession) {
-              setShowCancelModal(true);
-            }
-          }}
-          disabled={!focusSession}
-          className="p-3 bg-white hover:bg-lockin-soft-pink/30 border border-lockin-border rounded-full text-lockin-dark/70 hover:text-lockin-red transition-all transform active:scale-95 disabled:opacity-40 shadow-sm"
-          title="Cancel Focus Session"
-          aria-label="Cancel Focus Session"
-        >
-          <X className="w-4 h-4" />
-        </button>
+      {/* 4. BUTTONS ROW & XP REWARD PILLS */}
+      <div className="space-y-4 animate-card-pop stagger-4">
+        <div className="flex items-center justify-center gap-3 max-w-sm mx-auto">
+          {/* Cancel Session "X" Button with Pop-up Confirmation Indicator */}
+          <button
+            onClick={() => {
+              if (focusSession) {
+                setShowCancelModal(true);
+              }
+            }}
+            disabled={!focusSession}
+            className="p-3 bg-white hover:bg-lockin-soft-pink/30 border border-lockin-border rounded-full text-lockin-dark/70 hover:text-lockin-red transition-all transform active:scale-95 disabled:opacity-40 shadow-sm"
+            title="Cancel Focus Session"
+            aria-label="Cancel Focus Session"
+          >
+            <X className="w-4 h-4" />
+          </button>
 
-        {/* Main CTA Button: START / PAUSE / RESUME */}
-        {!focusSession ? (
-          <button
-            onClick={() => startFocusSession(selectedQuest || undefined, displayMinutes)}
-            className="flex-1 py-3.5 px-6 bg-lockin-red text-white font-black text-xs rounded-full shadow-pill hover:bg-[#c45a61] transition-all transform active:scale-95 flex items-center justify-center gap-2"
-          >
-            <Play className="w-4 h-4 fill-white" />
-            <span>START FOCUS</span>
-          </button>
-        ) : focusSession.state === 'RUNNING' ? (
-          <button
-            onClick={pauseFocusSession}
-            className="flex-1 py-3.5 px-6 bg-lockin-dark text-white font-black text-xs rounded-full shadow-card hover:bg-black transition-all transform active:scale-95 flex items-center justify-center gap-2"
-          >
-            <Pause className="w-4 h-4 fill-white" />
-            <span>PAUSE FOCUS</span>
-          </button>
-        ) : focusSession.state === 'PAUSED' ? (
-          <button
-            onClick={resumeFocusSession}
-            className="flex-1 py-3.5 px-6 bg-lockin-red text-white font-black text-xs rounded-full shadow-pill hover:bg-[#c45a61] transition-all transform active:scale-95 flex items-center justify-center gap-2"
-          >
-            <Play className="w-4 h-4 fill-white" />
-            <span>RESUME FOCUS</span>
-          </button>
-        ) : (
-          <button
-            onClick={claimFocusReward}
-            className="flex-1 py-3.5 px-6 bg-emerald-500 text-white font-black text-xs rounded-full shadow-pill hover:bg-emerald-600 transition-all transform active:scale-95 flex items-center justify-center gap-2 animate-bounce-gentle"
-          >
-            <Award className="w-4 h-4" />
-            <span>CLAIM REWARD</span>
-          </button>
-        )}
+          {/* Main CTA Button: START / PAUSE / RESUME */}
+          {!focusSession ? (
+            <button
+              onClick={() => startFocusSession(selectedQuest || undefined, displayMinutes)}
+              className="flex-1 py-3.5 px-6 bg-lockin-red text-white font-black text-xs rounded-full shadow-pill hover:bg-[#c45a61] transition-all transform active:scale-95 flex items-center justify-center gap-2"
+            >
+              <Play className="w-4 h-4 fill-white" />
+              <span>START FOCUS</span>
+            </button>
+          ) : focusSession.state === 'RUNNING' ? (
+            <button
+              onClick={pauseFocusSession}
+              className="flex-1 py-3.5 px-6 bg-lockin-dark text-white font-black text-xs rounded-full shadow-card hover:bg-black transition-all transform active:scale-95 flex items-center justify-center gap-2"
+            >
+              <Pause className="w-4 h-4 fill-white" />
+              <span>PAUSE FOCUS</span>
+            </button>
+          ) : focusSession.state === 'PAUSED' ? (
+            <button
+              onClick={resumeFocusSession}
+              className="flex-1 py-3.5 px-6 bg-lockin-red text-white font-black text-xs rounded-full shadow-pill hover:bg-[#c45a61] transition-all transform active:scale-95 flex items-center justify-center gap-2"
+            >
+              <Play className="w-4 h-4 fill-white" />
+              <span>RESUME FOCUS</span>
+            </button>
+          ) : (
+            <button
+              onClick={claimFocusReward}
+              className="flex-1 py-3.5 px-6 bg-emerald-500 text-white font-black text-xs rounded-full shadow-pill hover:bg-emerald-600 transition-all transform active:scale-95 flex items-center justify-center gap-2 animate-bounce-gentle"
+            >
+              <Award className="w-4 h-4" />
+              <span>CLAIM REWARD</span>
+            </button>
+          )}
 
-        {/* Complete Button (Disabled until finished or ready) */}
-        <button
-          onClick={() => {
-            if (focusSession?.state === 'READY_TO_CLAIM') {
-              claimFocusReward();
-            } else if (focusSession) {
-              setShowCancelModal(true);
-            }
-          }}
-          disabled={!focusSession}
-          className={`py-3.5 px-5 rounded-full border text-xs font-bold transition-all flex items-center gap-1.5 ${
-            focusSession?.state === 'READY_TO_CLAIM'
-              ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm'
-              : 'bg-lockin-soft-pink/30 text-lockin-red/60 border-lockin-soft-pink opacity-60 cursor-not-allowed'
-          }`}
-        >
-          <CheckCircle2 className="w-4 h-4" />
-          <span>COMPLETE</span>
-        </button>
-      </div>
+          {/* Complete Button (Disabled until finished or ready) */}
+          <button
+            onClick={() => {
+              if (focusSession?.state === 'READY_TO_CLAIM') {
+                claimFocusReward();
+              } else if (focusSession) {
+                setShowCancelModal(true);
+              }
+            }}
+            disabled={!focusSession}
+            className={`py-3.5 px-5 rounded-full border text-xs font-bold transition-all flex items-center gap-1.5 ${
+              focusSession?.state === 'READY_TO_CLAIM'
+                ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm'
+                : 'bg-lockin-soft-pink/30 text-lockin-red/60 border-lockin-soft-pink opacity-60 cursor-not-allowed'
+            }`}
+          >
+            <CheckCircle2 className="w-4 h-4" />
+            <span>COMPLETE</span>
+          </button>
+        </div>
 
-      {/* 5. XP REWARD PILLS */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5">
-        <span className="text-xs font-extrabold text-lockin-red bg-lockin-soft-pink/30 px-3.5 py-1 rounded-full border border-lockin-soft-pink">
-          ⚡ +{displayXp} XP
-        </span>
-        <span className="text-xs font-extrabold text-[#B87A00] bg-lockin-cream px-3.5 py-1 rounded-full border border-lockin-yellow flex items-center gap-1">
-          <Sparkles className="w-3.5 h-3.5 fill-lockin-yellow" />
-          <span>Focus Bonus: +10 XP</span>
-        </span>
+        {/* 5. XP REWARD PILLS */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5">
+          <span className="text-xs font-extrabold text-lockin-red bg-lockin-soft-pink/30 px-3.5 py-1 rounded-full border border-lockin-soft-pink">
+            ⚡ +{displayXp} XP
+          </span>
+          <span className="text-xs font-extrabold text-[#B87A00] bg-lockin-cream px-3.5 py-1 rounded-full border border-lockin-yellow flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5 fill-lockin-yellow" />
+            <span>Focus Bonus: +10 XP</span>
+          </span>
+        </div>
       </div>
 
       {/* 6. MASCOT ILLUSTRATION BELOW WITH SPEECH BUBBLE */}
-      <div className="flex justify-center pt-2">
+      <div className="flex justify-center pt-2 animate-card-pop stagger-5">
         <div className="relative flex flex-col items-center">
           {/* Speech Bubble */}
           <div className="mb-2 px-4 py-1.5 bg-white border border-lockin-border rounded-2xl shadow-sm text-xs font-extrabold text-lockin-dark relative">
@@ -420,7 +422,7 @@ export const FocusView: React.FC = () => {
       </div>
 
       {/* 7. FOCUS HISTORY SECTION (Horizontal Scrollable Row) */}
-      <div className="stationery-card p-5 space-y-3">
+      <div className="stationery-card p-5 space-y-3 animate-card-pop stagger-6">
         <div className="flex items-center justify-between border-b border-lockin-border/60 pb-2.5">
           <h3 className="text-xs font-black tracking-wider text-lockin-muted uppercase flex items-center gap-2">
             <History className="w-4 h-4 text-lockin-red" />

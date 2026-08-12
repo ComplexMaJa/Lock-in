@@ -28,8 +28,8 @@ export const AchievementsView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn select-none">
-      <div>
+    <div className="space-y-6 pb-12 animate-page-pop select-none">
+      <div className="animate-card-pop stagger-1">
         <h2 className="text-2xl font-extrabold text-lockin-dark">Achievements</h2>
         <p className="text-xs text-lockin-muted mt-0.5">
           Collect badges and trophies as you build consistency across your life.
@@ -37,7 +37,7 @@ export const AchievementsView: React.FC = () => {
       </div>
 
       {/* Progress Card */}
-      <div className="stationery-card p-6 bg-gradient-to-r from-white via-white to-lockin-soft-pink/10">
+      <div className="stationery-card p-6 bg-gradient-to-r from-white via-white to-lockin-soft-pink/10 animate-card-pop stagger-2">
         <div className="flex items-center justify-between mb-2">
           <div>
             <span className="text-[11px] font-black tracking-wider text-lockin-muted uppercase">COLLECTION PROGRESS</span>
@@ -50,7 +50,7 @@ export const AchievementsView: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 animate-card-pop stagger-3">
         {(['All', 'Unlocked', 'Locked'] as const).map(f => (
           <button
             key={f}

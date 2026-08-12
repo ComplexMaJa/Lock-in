@@ -19,9 +19,9 @@ export const QuestsView: React.FC = () => {
   const completedCount = filteredQuests.filter(q => q.completed).length;
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn select-none">
+    <div className="space-y-6 pb-12 animate-page-pop select-none">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-card-pop stagger-1">
         <div>
           <h2 className="text-2xl font-extrabold text-lockin-dark">Quest Board</h2>
           <p className="text-xs text-lockin-muted mt-0.5">
@@ -39,7 +39,7 @@ export const QuestsView: React.FC = () => {
       </div>
 
       {/* Category Tabs: Daily, Weekly, Main, Side */}
-      <div className="flex items-center gap-2 p-1 bg-lockin-secondary rounded-full border border-lockin-border max-w-md">
+      <div className="flex items-center gap-2 p-1 bg-lockin-secondary rounded-full border border-lockin-border max-w-md animate-card-pop stagger-2">
         {(['Daily', 'Weekly', 'Main', 'Side'] as QuestType[]).map(tab => {
           const isActive = activeTypeTab === tab;
           return (
@@ -59,7 +59,7 @@ export const QuestsView: React.FC = () => {
       </div>
 
       {/* Quest Progress summary bar */}
-      <div className="stationery-card p-4 flex items-center justify-between">
+      <div className="stationery-card p-4 flex items-center justify-between animate-card-pop stagger-3">
         <div className="flex items-center gap-3">
           <Target className="w-5 h-5 text-lockin-red" />
           <div>
