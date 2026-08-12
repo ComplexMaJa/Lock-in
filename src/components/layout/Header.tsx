@@ -1,25 +1,36 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Bell, User, Sparkles } from 'lucide-react';
+import { Bell, User, Sparkles, Menu } from 'lucide-react';
 import { CatDoodle } from '../common/Doodle';
 
 export const Header: React.FC = () => {
-  const { userProfile, setActiveTab } = useApp();
+  const { userProfile, setActiveTab, setIsMobileDrawerOpen } = useApp();
 
   return (
     <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 relative select-none">
-      {/* Greeting Title */}
-      <div>
-        <div className="flex items-baseline gap-2">
-          <span className="text-xs font-bold tracking-widest text-lockin-muted uppercase">GOOD EVENING,</span>
+      {/* Greeting Title & Mobile Menu Trigger */}
+      <div className="flex items-center justify-between w-full md:w-auto">
+        <div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs font-bold tracking-widest text-lockin-muted uppercase">GOOD EVENING,</span>
+          </div>
+          <h2 className="text-3xl font-extrabold text-lockin-dark tracking-tight flex items-center gap-1.5 mt-0.5">
+            {userProfile.name}
+            <span className="text-lockin-red font-bold">.</span>
+          </h2>
+          <p className="text-sm font-medium text-lockin-muted mt-1">
+            What are we locking in on today?
+          </p>
         </div>
-        <h2 className="text-3xl font-extrabold text-lockin-dark tracking-tight flex items-center gap-1.5 mt-0.5">
-          {userProfile.name}
-          <span className="text-lockin-red font-bold">.</span>
-        </h2>
-        <p className="text-sm font-medium text-lockin-muted mt-1">
-          What are we locking in on today?
-        </p>
+
+        {/* Mobile Hamburger Menu Button */}
+        <button
+          onClick={() => setIsMobileDrawerOpen(true)}
+          className="md:hidden p-2.5 rounded-full bg-white border border-lockin-border text-lockin-dark hover:bg-lockin-secondary shadow-card"
+          aria-label="Open Mobile Navigation Menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Decorative Cat Doodle in background */}

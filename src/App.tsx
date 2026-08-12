@@ -18,10 +18,11 @@ import { GamingView } from './components/views/GamingView';
 import { ProfileView } from './components/views/ProfileView';
 import { SettingsView } from './components/views/SettingsView';
 
-// Modals
+// Modals & Drawers
 import { LevelUpModal } from './components/modals/LevelUpModal';
 import { AchievementModal } from './components/modals/AchievementModal';
 import { AddQuestModal } from './components/modals/AddQuestModal';
+import { MobileDrawer } from './components/layout/MobileDrawer';
 
 const AppContent: React.FC = () => {
   const { activeTab, viewportMode } = useApp();
@@ -69,13 +70,13 @@ const AppContent: React.FC = () => {
       >
         {/* Sidebar (Desktop Mode only) */}
         {!isMobileMode && (
-          <div className="hidden lg:block">
+          <div className="hidden lg:block h-full">
             <Sidebar />
           </div>
         )}
 
         {/* Main Content Area */}
-        <main className={`flex-1 flex flex-col ${isMobileMode ? 'p-4' : 'p-6 sm:p-8'}`}>
+        <main className={`flex-1 flex flex-col min-w-0 ${isMobileMode ? 'p-4' : 'p-6 sm:p-8'}`}>
           <Header />
           <div className="flex-1 mt-2">{renderActiveView()}</div>
         </main>
@@ -90,6 +91,9 @@ const AppContent: React.FC = () => {
 
       {/* Floating View Switcher & Audio Controls */}
       <ViewToggle />
+
+      {/* Mobile Navigation Drawer */}
+      <MobileDrawer />
 
       {/* RPG Modals */}
       <LevelUpModal />

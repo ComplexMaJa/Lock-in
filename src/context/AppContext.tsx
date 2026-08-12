@@ -35,6 +35,8 @@ interface AppContextType {
   viewportMode: 'desktop' | 'mobile-preview';
   activeTab: ActiveTab;
   activeFocusQuest: Quest | null;
+  isSidebarCollapsed: boolean;
+  isMobileDrawerOpen: boolean;
   showLevelUpModal: { show: boolean; oldLevel: number; newLevel: number } | null;
   showAchievementModal: Achievement | null;
   showAddQuestModal: boolean;
@@ -43,6 +45,9 @@ interface AppContextType {
   setActiveTab: (tab: ActiveTab) => void;
   setViewportMode: (mode: 'desktop' | 'mobile-preview') => void;
   setSoundEnabled: (enabled: boolean) => void;
+  setIsSidebarCollapsed: (collapsed: boolean) => void;
+  toggleSidebarCollapsed: () => void;
+  setIsMobileDrawerOpen: (open: boolean) => void;
   completeQuest: (questId: string) => void;
   addQuest: (questData: Partial<Quest>) => void;
   deleteQuest: (questId: string) => void;
@@ -162,6 +167,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [viewportMode, setViewportMode] = useState<'desktop' | 'mobile-preview'>('desktop');
   const [activeTab, setActiveTabState] = useState<ActiveTab>('Home');
   const [activeFocusQuest, setActiveFocusQuest] = useState<Quest | null>(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
+
+  const toggleSidebarCollapsed = () => {
+    playClickSound(soundEnabled);
+    setIsSidebarCollapsed(prev => !prev);
+  };
 
   // Modals
   const [showLevelUpModal, setShowLevelUpModal] = useState<{ show: boolean; oldLevel: number; newLevel: number } | null>(null);
@@ -561,12 +573,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         viewportMode,
         activeTab,
         activeFocusQuest,
+        isSidebarCollapsed,
+        isMobileDrawerOpen,
         showLevelUpModal,
         showAchievementModal,
         showAddQuestModal,
         setActiveTab,
         setViewportMode,
         setSoundEnabled,
+        setIsSidebarCollapsed,
+        toggleSidebarCollapsed,
+        setIsMobileDrawerOpen,
         completeQuest,
         addQuest,
         deleteQuest,
