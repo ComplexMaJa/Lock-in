@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Volume2, VolumeX, Plus, FileText, X, Sparkles, Check } from 'lucide-react';
+import { Volume2, VolumeX, Plus, FileText, X, Sparkles, Check, Clock } from 'lucide-react';
 
 export const ViewToggle: React.FC = () => {
   const { soundEnabled, setSoundEnabled, setShowAddQuestModal } = useApp();
@@ -10,6 +10,19 @@ export const ViewToggle: React.FC = () => {
     return localStorage.getItem('lockin_quick_notes') || '';
   });
   const [isSaved, setIsSaved] = useState<boolean>(false);
+
+  // Live real-time clock state (HH:MM:SS)
+  const [timeStr, setTimeStr] = useState<string>(() => {
+    return new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  });
+
+  // Clock Ticker (updates every 1000ms)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeStr(new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Auto-save notes to localStorage
   useEffect(() => {
@@ -118,6 +131,17 @@ export const ViewToggle: React.FC = () => {
         >
           {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
         </button>
+
+        <div className="w-[1px] h-5 bg-lockin-border mx-0.5" />
+
+        {/* Real-Time Live Clock Widget (HH:MM:SS in LOCK-IN Red) */}
+        <div
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-lockin-soft-pink/30 text-lockin-red border border-lockin-soft-pink/50 rounded-full text-xs font-mono font-black shadow-sm"
+          title="Current Time"
+        >
+          <Clock className="w-3.5 h-3.5 text-lockin-red shrink-0" />
+          <span>{timeStr}</span>
+        </div>
 
         <div className="w-[1px] h-5 bg-lockin-border mx-0.5" />
 
