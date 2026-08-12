@@ -7,6 +7,7 @@ import { CircularProgress } from '../common/CircularProgress';
 import { Badge } from '../common/Badge';
 import { SparkleDoodle } from '../common/Doodle';
 import heroImg from '../../assets/hero.png';
+import bannerImg from '../../assets/banner.png';
 import {
   Flame,
   Zap,
@@ -230,6 +231,15 @@ export const DashboardView: React.FC = () => {
             <div className="mt-2.5">
               <XPProgressBar progressPercent={userProfile.levelProgressPercent} barColor="bg-lockin-red" height={5} />
             </div>
+          </div>
+
+          {/* Aesthetic Banner Card */}
+          <div className="stationery-card overflow-hidden p-0 relative border-2 border-lockin-soft-pink/60 shadow-sm group hover:border-lockin-red transition-all">
+            <img
+              src={bannerImg}
+              alt="LOCK-IN RPG Banner"
+              className="w-full h-auto object-cover transform group-hover:scale-[1.02] transition-transform duration-500 rounded-3xl"
+            />
           </div>
 
         </div>
