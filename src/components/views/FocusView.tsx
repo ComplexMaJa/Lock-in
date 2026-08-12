@@ -6,7 +6,6 @@ import type { Quest } from '../../types';
 import {
   Play,
   Pause,
-  RotateCcw,
   CheckCircle2,
   XCircle,
   Sparkles,
@@ -320,17 +319,19 @@ export const FocusView: React.FC = () => {
 
       {/* 4. BUTTONS ROW: RESET, START/PAUSE/RESUME, COMPLETE/CLAIM */}
       <div className="flex items-center justify-center gap-3 max-w-sm mx-auto">
-        {/* Reset Button */}
+        {/* Cancel Session "X" Button with Pop-up Confirmation Indicator */}
         <button
           onClick={() => {
-            if (focusSession) cancelFocusSession();
+            if (focusSession) {
+              setShowCancelModal(true);
+            }
           }}
           disabled={!focusSession}
-          className="p-3 bg-white hover:bg-lockin-secondary border border-lockin-border rounded-full text-lockin-dark/70 hover:text-lockin-dark transition-all disabled:opacity-40"
-          title="Reset Timer"
-          aria-label="Reset Timer"
+          className="p-3 bg-white hover:bg-lockin-soft-pink/30 border border-lockin-border rounded-full text-lockin-dark/70 hover:text-lockin-red transition-all transform active:scale-95 disabled:opacity-40 shadow-sm"
+          title="Cancel Focus Session"
+          aria-label="Cancel Focus Session"
         >
-          <RotateCcw className="w-4 h-4" />
+          <X className="w-4 h-4" />
         </button>
 
         {/* Main CTA Button: START / PAUSE / RESUME */}
@@ -418,9 +419,9 @@ export const FocusView: React.FC = () => {
         </div>
       </div>
 
-      {/* 7. FOCUS HISTORY SECTION */}
-      <div className="stationery-card p-5 space-y-4">
-        <div className="flex items-center justify-between border-b border-lockin-border/60 pb-3">
+      {/* 7. FOCUS HISTORY SECTION (Horizontal Scrollable Row) */}
+      <div className="stationery-card p-5 space-y-3">
+        <div className="flex items-center justify-between border-b border-lockin-border/60 pb-2.5">
           <h3 className="text-xs font-black tracking-wider text-lockin-muted uppercase flex items-center gap-2">
             <History className="w-4 h-4 text-lockin-red" />
             <span>FOCUS HISTORY</span>
@@ -435,49 +436,56 @@ export const FocusView: React.FC = () => {
             No focus sessions recorded yet. Start your first session above!
           </p>
         ) : (
-          <div className="space-y-2.5">
+          <div className="flex items-stretch gap-3 overflow-x-auto pb-2 pt-1 scrollbar-thin">
             {focusHistory.map((session, index) => (
               <div
                 key={session.id || index}
-                className="flex items-center justify-between p-3.5 rounded-2xl border border-lockin-border/80 bg-white hover:border-lockin-soft-pink transition-all"
+                className="min-w-[220px] sm:min-w-[240px] max-w-[250px] shrink-0 p-3 rounded-2xl border border-lockin-border bg-white hover:border-lockin-soft-pink transition-all flex flex-col justify-between shadow-sm space-y-3"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-extrabold text-lockin-dark truncate" title={session.questTitle}>
+                      {session.questTitle}
+                    </p>
+                    <p className="text-[10px] font-bold text-lockin-muted mt-0.5">
+                      ⏱ {session.plannedDurationMin} min • {session.completedAt ? new Date(session.completedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Earlier'}
+                    </p>
+                  </div>
+
                   <div
-                    className={`p-2 rounded-xl border ${
+                    className={`p-1.5 rounded-xl border shrink-0 ${
                       session.state === 'COMPLETED'
                         ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
                         : 'bg-rose-50 text-rose-500 border-rose-200'
                     }`}
                   >
                     {session.state === 'COMPLETED' ? (
-                      <CheckCircle2 className="w-4 h-4" />
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                     ) : (
-                      <XCircle className="w-4 h-4" />
+                      <XCircle className="w-3.5 h-3.5" />
                     )}
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-extrabold text-lockin-dark">{session.questTitle}</p>
-                    <p className="text-[10px] font-bold text-lockin-muted mt-0.5">
-                      ⏱ {session.plannedDurationMin} min • {session.state === 'COMPLETED' ? 'Completed' : 'Cancelled'}
-                    </p>
                   </div>
                 </div>
 
-                <div className="text-right">
+                <div className="flex items-center justify-between pt-2 border-t border-lockin-border/40 text-[10px]">
                   <span
-                    className={`text-xs font-black ${
+                    className={`font-bold px-2 py-0.5 rounded-full ${
+                      session.state === 'COMPLETED'
+                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                        : 'bg-rose-50 text-rose-500 border border-rose-200'
+                    }`}
+                  >
+                    {session.state === 'COMPLETED' ? 'Completed' : 'Cancelled'}
+                  </span>
+
+                  <span
+                    className={`font-black text-xs ${
                       session.state === 'COMPLETED' ? 'text-lockin-red' : 'text-lockin-muted'
                     }`}
                   >
                     {session.state === 'COMPLETED'
                       ? `+${session.rewardXp + session.bonusXp} XP`
                       : '0 XP'}
-                  </span>
-                  <span className="text-[9px] font-bold text-lockin-muted block">
-                    {session.completedAt
-                      ? new Date(session.completedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                      : 'Earlier'}
                   </span>
                 </div>
               </div>

@@ -12,8 +12,7 @@ import {
   Moon,
   Gamepad2,
   Settings,
-  User,
-  Lock
+  User
 } from 'lucide-react';
 
 interface NavConfig {
@@ -24,7 +23,7 @@ interface NavConfig {
 }
 
 export const SidebarNavigation: React.FC<{ onNavigate?: () => void }> = ({ onNavigate }) => {
-  const { activeTab, setActiveTab, quests, achievements, activeFocusQuest, isSidebarCollapsed } = useApp();
+  const { activeTab, setActiveTab, quests, achievements, isSidebarCollapsed } = useApp();
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 
   const incompleteQuestsCount = quests.filter(q => !q.completed).length;
@@ -54,14 +53,6 @@ export const SidebarNavigation: React.FC<{ onNavigate?: () => void }> = ({ onNav
       return (
         <span className="text-[10px] font-extrabold bg-lockin-soft-pink/60 text-lockin-red px-2 py-0.5 rounded-full border border-lockin-soft-pink">
           {incompleteQuestsCount}
-        </span>
-      );
-    }
-    if (tab === 'Focus' && activeFocusQuest) {
-      return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold bg-lockin-red text-white px-2 py-0.5 rounded-full animate-pulse shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-white" />
-          <span>Active</span>
         </span>
       );
     }
@@ -124,12 +115,7 @@ export const SidebarNavigation: React.FC<{ onNavigate?: () => void }> = ({ onNav
 
                 {/* Label */}
                 {!isSidebarCollapsed && (
-                  <span className="truncate flex-1 text-left flex items-center gap-1.5">
-                    <span>{item.label}</span>
-                    {activeTab === 'Focus' && item.tab !== 'Focus' && (
-                      <Lock className="w-3 h-3 text-lockin-muted/50 inline-block" />
-                    )}
-                  </span>
+                  <span className="truncate flex-1 text-left">{item.label}</span>
                 )}
 
                 {/* Badge when expanded */}

@@ -28,14 +28,14 @@ import { MobileDrawer } from './components/layout/MobileDrawer';
 const AppContent: React.FC = () => {
   const { activeTab, viewportMode, focusSession, setActiveTab } = useApp();
 
-  const isSessionActive = Boolean(
+  const isImmersiveMode = Boolean(
     focusSession &&
     (focusSession.state === 'RUNNING' || focusSession.state === 'PAUSED' || focusSession.state === 'READY_TO_CLAIM')
   );
 
   // Intercept browser Back button when focus session is active
   React.useEffect(() => {
-    if (isSessionActive) {
+    if (isImmersiveMode) {
       window.history.pushState(null, '', window.location.href);
       const handlePopState = (e: PopStateEvent) => {
         e.preventDefault();
@@ -45,9 +45,13 @@ const AppContent: React.FC = () => {
       window.addEventListener('popstate', handlePopState);
       return () => window.removeEventListener('popstate', handlePopState);
     }
-  }, [isSessionActive, setActiveTab]);
+  }, [isImmersiveMode, setActiveTab]);
 
   const renderActiveView = () => {
+    if (isImmersiveMode) {
+      return <FocusView />;
+    }
+
     switch (activeTab) {
       case 'Home':
         return <DashboardView />;
@@ -88,8 +92,8 @@ const AppContent: React.FC = () => {
             : 'flex min-h-screen w-full'
         }`}
       >
-        {/* Sidebar (Desktop Mode only) */}
-        {!isMobileMode && (
+        {/* Sidebar (Desktop Mode only - Hidden during Immersive Active Focus Mode) */}
+        {!isMobileMode && !isImmersiveMode && (
           <div className="hidden lg:block h-full">
             <Sidebar />
           </div>
@@ -97,12 +101,12 @@ const AppContent: React.FC = () => {
 
         {/* Main Content Area */}
         <main className={`flex-1 flex flex-col min-w-0 ${isMobileMode ? 'p-4' : 'p-6 sm:p-8'}`}>
-          <Header />
+          {!isImmersiveMode && <Header />}
           <div className="flex-1 mt-2">{renderActiveView()}</div>
         </main>
 
-        {/* Mobile Navigation */}
-        {(isMobileMode || typeof window !== 'undefined') && (
+        {/* Mobile Navigation (Hidden during Immersive Active Focus Mode) */}
+        {!isImmersiveMode && (isMobileMode || typeof window !== 'undefined') && (
           <div className={isMobileMode ? 'block' : 'block lg:hidden'}>
             <MobileNav />
           </div>
