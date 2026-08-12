@@ -7,7 +7,7 @@ export const Header: React.FC = () => {
   const { userProfile, setActiveTab, setIsMobileDrawerOpen } = useApp();
 
   return (
-    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 relative select-none">
+    <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 sm:pb-4 relative select-none">
       {/* Greeting Title & Mobile Menu Trigger */}
       <div className="flex items-center justify-between w-full md:w-auto">
         <div>

@@ -59,13 +59,13 @@ const AppContent: React.FC = () => {
   const isMobileMode = viewportMode === 'mobile-preview';
 
   return (
-    <div className={`min-h-screen bg-lockin-bg text-lockin-dark font-sans flex justify-center ${isMobileMode ? 'py-6 px-2' : ''}`}>
-      {/* Mobile Frame Container if mobile-preview toggled */}
+    <div className={`min-h-screen bg-lockin-bg text-lockin-dark font-sans flex ${isMobileMode ? 'justify-center py-6 px-2' : ''}`}>
+      {/* Container - Flush left on desktop view */}
       <div
         className={`w-full transition-all duration-300 ${
           isMobileMode
             ? 'max-w-[430px] min-h-[880px] bg-lockin-bg rounded-[45px] border-[10px] border-lockin-dark shadow-2xl overflow-hidden relative pb-16'
-            : 'max-w-[1600px] flex min-h-screen'
+            : 'flex min-h-screen w-full'
         }`}
       >
         {/* Sidebar (Desktop Mode only) */}

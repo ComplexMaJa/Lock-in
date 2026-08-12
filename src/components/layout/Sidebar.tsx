@@ -11,7 +11,7 @@ export const Sidebar: React.FC = () => {
   return (
     <aside
       className={`bg-lockin-bg min-h-screen h-full flex flex-col justify-between border-r border-lockin-border/70 select-none transition-all duration-300 ease-in-out shrink-0 ${
-        isSidebarCollapsed ? 'w-[80px] p-2' : 'w-[260px] p-4'
+        isSidebarCollapsed ? 'w-[72px] p-2' : 'w-[230px] p-3.5'
       }`}
     >
       {/* Top Header */}
