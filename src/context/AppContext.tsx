@@ -10,7 +10,8 @@ import type {
   ActivityItem,
   ActiveTab,
   FocusSession,
-  XPTransaction
+  XPTransaction,
+  ThemeMode
 } from '../types';
 import {
   DEFAULT_USER_PROFILE,
@@ -43,6 +44,7 @@ interface AppContextType {
   focusHistory: FocusSession[];
   processedTransactionIds: string[];
   soundEnabled: boolean;
+  theme: ThemeMode;
   viewportMode: 'desktop' | 'mobile-preview';
   activeTab: ActiveTab;
   activeFocusQuest: Quest | null;
@@ -58,6 +60,8 @@ interface AppContextType {
   setActiveFocusQuest: (quest: Quest | null) => void;
   setViewportMode: (mode: 'desktop' | 'mobile-preview') => void;
   setSoundEnabled: (enabled: boolean) => void;
+  setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
   setIsSidebarCollapsed: (collapsed: boolean) => void;
   toggleSidebarCollapsed: () => void;
   setIsMobileDrawerOpen: (open: boolean) => void;
@@ -217,6 +221,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [soundEnabled, setSoundEnabledState] = useState<boolean>(true);
+  const [theme, setThemeState] = useState<ThemeMode>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_theme`);
+      return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_theme`, theme);
+    } catch {}
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const setTheme = (newTheme: ThemeMode) => {
+    playClickSound(soundEnabled);
+    setThemeState(newTheme);
+  };
+
+  const toggleTheme = () => {
+    playClickSound(soundEnabled);
+    setThemeState(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
+
   const [viewportMode, setViewportMode] = useState<'desktop' | 'mobile-preview'>('desktop');
   const [activeTab, setActiveTabState] = useState<ActiveTab>('Home');
   const [activeFocusQuest, setActiveFocusQuest] = useState<Quest | null>(null);
@@ -809,6 +843,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         focusHistory,
         processedTransactionIds,
         soundEnabled,
+        theme,
         viewportMode,
         activeTab,
         activeFocusQuest,
@@ -822,6 +857,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActiveFocusQuest,
         setViewportMode,
         setSoundEnabled,
+        setTheme,
+        toggleTheme,
         setIsSidebarCollapsed,
         toggleSidebarCollapsed,
         setIsMobileDrawerOpen,

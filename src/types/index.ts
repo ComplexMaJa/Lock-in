@@ -2,6 +2,8 @@ export type CategoryType = 'School' | 'Development' | 'Fitness' | 'Personal' | '
 
 export type QuestType = 'Daily' | 'Weekly' | 'Main' | 'Side';
 
+export type ThemeMode = 'light' | 'dark';
+
 export interface Milestone {
   id: string;
   title: string;

@@ -1,21 +1,59 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Volume2, VolumeX, RotateCcw, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, RotateCcw, Sparkles, Sun, Moon } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
-  const { soundEnabled, setSoundEnabled, resetToDefaultState } = useApp();
+  const { soundEnabled, setSoundEnabled, resetToDefaultState, theme, setTheme } = useApp();
 
   return (
     <div className="space-y-6 pb-12 animate-page-pop max-w-2xl mx-auto select-none">
       <div className="animate-card-pop stagger-1">
         <h2 className="text-2xl font-extrabold text-lockin-dark">App Settings</h2>
         <p className="text-xs text-lockin-muted mt-0.5">
-          Configure application preferences, audio sound effects, and data storage.
+          Configure application preferences, theme appearance, audio sound effects, and data storage.
         </p>
       </div>
 
+      {/* Theme Mode Card */}
+      <div className="stationery-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-card-pop stagger-2">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-lockin-soft-pink/30 text-lockin-red rounded-2xl border border-lockin-soft-pink">
+            {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+          </div>
+          <div>
+            <h4 className="text-sm font-extrabold text-lockin-dark">Appearance Theme</h4>
+            <p className="text-xs text-lockin-muted">Switch between Cozy Light Mode and Dark Pastel Anime RPG Theme</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 bg-lockin-secondary p-1 rounded-full border border-lockin-border">
+          <button
+            onClick={() => setTheme('light')}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-extrabold transition-all ${
+              theme === 'light'
+                ? 'bg-white text-lockin-dark shadow-card'
+                : 'text-lockin-muted hover:text-lockin-dark'
+            }`}
+          >
+            <Sun className="w-3.5 h-3.5" />
+            LIGHT
+          </button>
+          <button
+            onClick={() => setTheme('dark')}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-extrabold transition-all ${
+              theme === 'dark'
+                ? 'bg-lockin-red text-white shadow-pill'
+                : 'text-lockin-muted hover:text-lockin-dark'
+            }`}
+          >
+            <Moon className="w-3.5 h-3.5 text-white fill-white" />
+            DARK
+          </button>
+        </div>
+      </div>
+
       {/* Sound Effects Card */}
-      <div className="stationery-card p-6 flex items-center justify-between animate-card-pop stagger-2">
+      <div className="stationery-card p-6 flex items-center justify-between animate-card-pop stagger-3">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-lockin-soft-pink/30 text-lockin-red rounded-2xl border border-lockin-soft-pink">
             {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}

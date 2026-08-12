@@ -15,7 +15,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   strokeWidth = 8,
   grade = 'A',
   label = "TODAY'S SCORE",
-  color = '#D96B72',
+  color = 'var(--color-lockin-red)',
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -30,7 +30,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="#F2EEE9"
+            stroke="var(--color-lockin-border)"
             strokeWidth={strokeWidth}
             fill="transparent"
           />
@@ -56,7 +56,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
         </div>
       </div>
       {grade && (
-        <div className="absolute -top-1 -right-1 bg-lockin-soft-pink text-lockin-red font-black text-xs px-2 py-0.5 rounded-full border border-white shadow-sm">
+        <div className="absolute -top-1 -right-1 bg-lockin-soft-pink text-lockin-red font-black text-xs px-2 py-0.5 rounded-full border border-lockin-border shadow-sm">
           {grade}
         </div>
       )}

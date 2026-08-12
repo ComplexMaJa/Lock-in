@@ -56,7 +56,7 @@ export const ViewToggle: React.FC = () => {
 
             <div className="flex items-center gap-2">
               {isSaved && (
-                <span className="text-[10px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1 animate-fadeIn">
+                <span className="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800 flex items-center gap-1 animate-fadeIn">
                   <Check className="w-3 h-3" /> Saved
                 </span>
               )}
@@ -112,7 +112,7 @@ export const ViewToggle: React.FC = () => {
         <button
           onClick={() => setSoundEnabled(!soundEnabled)}
           className={`p-2 rounded-full text-xs font-bold transition-all transform active:scale-90 ${
-            soundEnabled ? 'bg-lockin-soft-pink/30 text-lockin-red' : 'bg-gray-100 text-lockin-muted hover:text-lockin-dark'
+            soundEnabled ? 'bg-lockin-soft-pink/30 text-lockin-red' : 'bg-lockin-secondary text-lockin-muted hover:text-lockin-dark'
           }`}
           title={soundEnabled ? 'Sound On' : 'Sound Muted'}
         >

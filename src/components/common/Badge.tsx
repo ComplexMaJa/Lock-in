@@ -10,14 +10,14 @@ interface BadgeProps {
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  School: { bg: 'bg-[#FFF1D6]', text: 'text-[#B87A00]', border: 'border-[#F8E7A8]' },
-  Academics: { bg: 'bg-[#FFF1D6]', text: 'text-[#B87A00]', border: 'border-[#F8E7A8]' },
-  Development: { bg: 'bg-[#F7C6CE]/30', text: 'text-[#D96B72]', border: 'border-[#F7C6CE]' },
-  Fitness: { bg: 'bg-[#C7E4F5]/40', text: 'text-[#2B7A9E]', border: 'border-[#C7E4F5]' },
-  Personal: { bg: 'bg-[#DDD2F4]/40', text: 'text-[#6A4EA0]', border: 'border-[#DDD2F4]' },
-  Balance: { bg: 'bg-[#FFF1D6]', text: 'text-[#8C6D23]', border: 'border-[#F8E7A8]' },
-  Recovery: { bg: 'bg-[#C7E4F5]/50', text: 'text-[#2B7A9E]', border: 'border-[#C7E4F5]' },
-  Discipline: { bg: 'bg-[#F8E7A8]/50', text: 'text-[#8C6D23]', border: 'border-[#F8E7A8]' },
+  School: { bg: 'bg-lockin-cream', text: 'text-[#B87A00] dark:text-[#F8E7A8]', border: 'border-lockin-yellow' },
+  Academics: { bg: 'bg-lockin-cream', text: 'text-[#B87A00] dark:text-[#F8E7A8]', border: 'border-lockin-yellow' },
+  Development: { bg: 'bg-lockin-soft-pink/40', text: 'text-lockin-red', border: 'border-lockin-soft-pink' },
+  Fitness: { bg: 'bg-lockin-blue/50', text: 'text-[#2B7A9E] dark:text-[#C7E4F5]', border: 'border-lockin-blue' },
+  Personal: { bg: 'bg-lockin-lavender/50', text: 'text-[#6A4EA0] dark:text-[#C9B9E8]', border: 'border-lockin-lavender' },
+  Balance: { bg: 'bg-lockin-cream', text: 'text-[#8C6D23] dark:text-[#F8E7A8]', border: 'border-lockin-yellow' },
+  Recovery: { bg: 'bg-lockin-blue/50', text: 'text-[#2B7A9E] dark:text-[#C7E4F5]', border: 'border-lockin-blue' },
+  Discipline: { bg: 'bg-lockin-cream', text: 'text-[#8C6D23] dark:text-[#F8E7A8]', border: 'border-lockin-yellow' },
 };
 
 export const Badge: React.FC<BadgeProps> = ({
@@ -31,7 +31,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   if (variant === 'xp') {
     return (
-      <span className={`inline-flex items-center gap-1 rounded-full font-bold bg-[#F7C6CE]/30 text-[#D96B72] border border-[#F7C6CE] ${sizeClasses} ${className}`}>
+      <span className={`inline-flex items-center gap-1 rounded-full font-bold bg-lockin-soft-pink/40 text-lockin-red border border-lockin-soft-pink ${sizeClasses} ${className}`}>
         {children || category}
       </span>
     );
@@ -39,7 +39,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   if (variant === 'streak') {
     return (
-      <span className={`inline-flex items-center gap-1 rounded-full font-bold bg-[#FFF1D6] text-[#D96B72] border border-[#F8E7A8] ${sizeClasses} ${className}`}>
+      <span className={`inline-flex items-center gap-1 rounded-full font-bold bg-lockin-cream text-lockin-red border border-lockin-yellow ${sizeClasses} ${className}`}>
         🔥 {children || category}
       </span>
     );

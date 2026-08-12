@@ -1,10 +1,10 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Bell, User, Sparkles, Menu } from 'lucide-react';
+import { Bell, User, Sparkles, Menu, Sun, Moon } from 'lucide-react';
 import { CatDoodle } from '../common/Doodle';
 
 export const Header: React.FC = () => {
-  const { userProfile, setActiveTab, setIsMobileDrawerOpen } = useApp();
+  const { userProfile, setActiveTab, setIsMobileDrawerOpen, theme, toggleTheme } = useApp();
 
   return (
     <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 sm:pb-4 relative select-none">
@@ -35,11 +35,24 @@ export const Header: React.FC = () => {
 
       {/* Decorative Cat Doodle in background */}
       <div className="hidden lg:block absolute left-[320px] top-1 opacity-20 pointer-events-none">
-        <CatDoodle stroke="#242424" />
+        <CatDoodle stroke="currentColor" />
       </div>
 
       {/* Right User Bar */}
       <div className="flex items-center gap-3">
+        {/* Theme Toggle Button (Light/Dark Mode) */}
+        <button
+          onClick={toggleTheme}
+          className="p-2.5 rounded-full bg-white border border-lockin-border text-lockin-dark/70 hover:text-lockin-dark hover:bg-lockin-secondary transition-all shadow-card"
+          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-4 h-4 text-lockin-yellow fill-lockin-yellow" />
+          ) : (
+            <Moon className="w-4 h-4 text-lockin-dark" />
+          )}
+        </button>
+
         {/* Notifications Button */}
         <button className="p-2.5 rounded-full bg-white border border-lockin-border text-lockin-dark/70 hover:text-lockin-dark hover:bg-lockin-secondary transition-all shadow-card relative">
           <Bell className="w-4 h-4" />

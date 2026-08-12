@@ -104,14 +104,14 @@ export const ProgressView: React.FC = () => {
           <div className="min-w-[450px] relative">
             <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-auto overflow-visible">
               {/* Grid lines */}
-              <line x1="0" y1="20" x2={chartWidth} y2="20" stroke="#F2EEE9" strokeDasharray="4 4" />
-              <line x1="0" y1="60" x2={chartWidth} y2="60" stroke="#F2EEE9" strokeDasharray="4 4" />
-              <line x1="0" y1="100" x2={chartWidth} y2="100" stroke="#F2EEE9" strokeDasharray="4 4" />
+              <line x1="0" y1="20" x2={chartWidth} y2="20" stroke="var(--color-lockin-border)" strokeDasharray="4 4" />
+              <line x1="0" y1="60" x2={chartWidth} y2="60" stroke="var(--color-lockin-border)" strokeDasharray="4 4" />
+              <line x1="0" y1="100" x2={chartWidth} y2="100" stroke="var(--color-lockin-border)" strokeDasharray="4 4" />
 
               <defs>
                 <linearGradient id="xpArea" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#D96B72" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#D96B72" stopOpacity="0" />
+                  <stop offset="0%" stopColor="var(--color-lockin-red)" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="var(--color-lockin-red)" stopOpacity="0" />
                 </linearGradient>
               </defs>
 
@@ -120,18 +120,18 @@ export const ProgressView: React.FC = () => {
                 fill="url(#xpArea)"
               />
 
-              <path d={pathD} fill="none" stroke="#D96B72" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={pathD} fill="none" stroke="var(--color-lockin-red)" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
 
               {/* Data points */}
               {points.map((p, idx) => (
                 <g key={idx} className="group cursor-pointer">
-                  <circle cx={p.x} cy={p.y} r="6" fill="#FFFFFF" stroke="#D96B72" strokeWidth="3" className="transition-transform group-hover:scale-150" />
-                  <text x={p.x} y={chartHeight + 15} textAnchor="middle" fontSize="11" fontWeight="bold" fill="#777777">
+                  <circle cx={p.x} cy={p.y} r="6" fill="var(--color-lockin-card)" stroke="var(--color-lockin-red)" strokeWidth="3" className="transition-transform group-hover:scale-150" />
+                  <text x={p.x} y={chartHeight + 15} textAnchor="middle" fontSize="11" fontWeight="bold" fill="var(--color-lockin-muted)">
                     {p.day}
                   </text>
                   <g className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <rect x={p.x - 24} y={p.y - 30} width="48" height="20" rx="6" fill="#242424" />
-                    <text x={p.x} y={p.y - 16} textAnchor="middle" fontSize="10" fontWeight="bold" fill="#FFFFFF">
+                    <rect x={p.x - 24} y={p.y - 30} width="48" height="20" rx="6" fill="var(--color-lockin-dark)" />
+                    <text x={p.x} y={p.y - 16} textAnchor="middle" fontSize="10" fontWeight="bold" fill="var(--color-lockin-bg)">
                       {p.xp} XP
                     </text>
                   </g>

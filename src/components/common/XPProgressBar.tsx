@@ -22,7 +22,7 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
   return (
     <div className={`w-full flex items-center gap-3 ${className}`}>
       <div
-        className="w-full bg-[#F2EEE9] rounded-full overflow-hidden p-0.5 border border-[#EBE7E3] relative"
+        className="w-full bg-lockin-secondary rounded-full overflow-hidden p-0.5 border border-lockin-border relative"
         style={{ height: height + 4 }}
       >
         <div

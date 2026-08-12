@@ -407,9 +407,9 @@ export const FocusView: React.FC = () => {
       <div className="flex justify-center pt-2 animate-card-pop stagger-5">
         <div className="relative flex flex-col items-center">
           {/* Speech Bubble */}
-          <div className="mb-2 px-4 py-1.5 bg-white border border-lockin-border rounded-2xl shadow-sm text-xs font-extrabold text-lockin-dark relative">
+          <div className="mb-2 px-4 py-1.5 bg-lockin-card border border-lockin-border rounded-2xl shadow-sm text-xs font-extrabold text-lockin-dark relative">
             <span>{getMascotMessage()}</span>
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white border-r border-b border-lockin-border transform rotate-45" />
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-lockin-card border-r border-b border-lockin-border transform rotate-45" />
           </div>
 
           {/* Mascot Asset */}
@@ -442,7 +442,7 @@ export const FocusView: React.FC = () => {
             {focusHistory.map((session, index) => (
               <div
                 key={session.id || index}
-                className="min-w-[220px] sm:min-w-[240px] max-w-[250px] shrink-0 p-3 rounded-2xl border border-lockin-border bg-white hover:border-lockin-soft-pink transition-all flex flex-col justify-between shadow-sm space-y-3"
+                className="min-w-[220px] sm:min-w-[240px] max-w-[250px] shrink-0 p-3 rounded-2xl border border-lockin-border bg-lockin-card hover:border-lockin-soft-pink transition-all flex flex-col justify-between shadow-sm space-y-3"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
@@ -457,8 +457,8 @@ export const FocusView: React.FC = () => {
                   <div
                     className={`p-1.5 rounded-xl border shrink-0 ${
                       session.state === 'COMPLETED'
-                        ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
-                        : 'bg-rose-50 text-rose-500 border-rose-200'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-400 border-rose-200 dark:border-rose-800'
                     }`}
                   >
                     {session.state === 'COMPLETED' ? (
@@ -473,8 +473,8 @@ export const FocusView: React.FC = () => {
                   <span
                     className={`font-bold px-2 py-0.5 rounded-full ${
                       session.state === 'COMPLETED'
-                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-                        : 'bg-rose-50 text-rose-500 border border-rose-200'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-400 border border-rose-200 dark:border-rose-800'
                     }`}
                   >
                     {session.state === 'COMPLETED' ? 'Completed' : 'Cancelled'}
