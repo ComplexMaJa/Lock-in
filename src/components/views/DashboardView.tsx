@@ -10,8 +10,6 @@ import heroImg from '../../assets/hero.png';
 import {
   Flame,
   Zap,
-  CheckCircle2,
-  Circle,
   Gift,
   ChevronRight,
   TrendingUp,
@@ -25,7 +23,6 @@ export const DashboardView: React.FC = () => {
     skills,
     achievements,
     activities,
-    completeQuest,
     startFocusSession,
     setActiveTab,
   } = useApp();
@@ -114,16 +111,9 @@ export const DashboardView: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <button
-                      onClick={() => completeQuest(quest.id)}
-                      className="shrink-0 transition-transform active:scale-90"
-                    >
-                      {quest.completed ? (
-                        <CheckCircle2 className="w-4.5 h-4.5 text-lockin-red fill-lockin-soft-pink/40" />
-                      ) : (
-                        <Circle className="w-4.5 h-4.5 text-lockin-muted/60 hover:text-lockin-red" />
-                      )}
-                    </button>
+                    <div className="p-1.5 bg-lockin-soft-pink/30 text-lockin-red rounded-lg shrink-0">
+                      <Zap className="w-3.5 h-3.5 fill-lockin-red" />
+                    </div>
 
                     <div className="min-w-0">
                       <p className={`text-xs font-bold truncate ${quest.completed ? 'line-through text-lockin-muted' : 'text-lockin-dark'}`}>
@@ -139,14 +129,12 @@ export const DashboardView: React.FC = () => {
                   <div className="flex items-center gap-2 shrink-0">
                     <span className="text-[11px] font-extrabold text-lockin-red">+{quest.xp} XP</span>
                     <button
-                      onClick={() => completeQuest(quest.id)}
-                      className={`p-1 rounded-full border text-[11px] ${
-                        quest.completed
-                          ? 'bg-lockin-soft-pink/30 border-lockin-soft-pink text-lockin-red'
-                          : 'bg-lockin-secondary border-lockin-border text-lockin-muted hover:text-lockin-dark'
-                      }`}
+                      onClick={() => startFocusSession(quest)}
+                      className="flex items-center gap-1 px-3 py-1 bg-lockin-red text-white font-extrabold text-[11px] rounded-full shadow-pill hover:bg-[#c45a61] transition-all transform active:scale-95 shrink-0"
+                      title="Focus on this quest"
                     >
-                      {quest.completed ? '✓' : '○'}
+                      <Zap className="w-3 h-3 fill-white" />
+                      <span>FOCUS</span>
                     </button>
                   </div>
                 </div>

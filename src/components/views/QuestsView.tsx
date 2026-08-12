@@ -4,8 +4,6 @@ import type { QuestType } from '../../types';
 import { Badge } from '../common/Badge';
 import { XPProgressBar } from '../common/XPProgressBar';
 import {
-  CheckCircle2,
-  Circle,
   Plus,
   Trash2,
   Target,
@@ -14,7 +12,7 @@ import {
 } from 'lucide-react';
 
 export const QuestsView: React.FC = () => {
-  const { quests, completeQuest, deleteQuest, setShowAddQuestModal, startFocusSession } = useApp();
+  const { quests, deleteQuest, setShowAddQuestModal, startFocusSession } = useApp();
   const [activeTypeTab, setActiveTypeTab] = useState<QuestType>('Daily');
 
   const filteredQuests = quests.filter(q => q.type === activeTypeTab);
@@ -149,16 +147,9 @@ export const QuestsView: React.FC = () => {
               }`}
             >
               <div className="flex items-center gap-3">
-                <button
-                  onClick={() => completeQuest(quest.id)}
-                  className="shrink-0 transition-transform active:scale-90"
-                >
-                  {quest.completed ? (
-                    <CheckCircle2 className="w-6 h-6 text-lockin-red fill-lockin-soft-pink/40" />
-                  ) : (
-                    <Circle className="w-6 h-6 text-lockin-muted hover:text-lockin-red" />
-                  )}
-                </button>
+                <div className="p-2 bg-lockin-soft-pink/30 text-lockin-red rounded-xl shrink-0">
+                  <Target className="w-5 h-5" />
+                </div>
 
                 <div>
                   <div className="flex items-center gap-2">
@@ -180,10 +171,11 @@ export const QuestsView: React.FC = () => {
 
                 <button
                   onClick={() => startFocusSession(quest)}
-                  className="p-2 bg-lockin-secondary hover:bg-lockin-soft-pink/30 text-lockin-dark rounded-full text-xs font-bold transition-all"
-                  title="Start Focus Timer"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-lockin-red text-white font-black text-xs rounded-full shadow-pill hover:bg-[#c45a61] transition-all transform active:scale-95 shrink-0"
+                  title="Start Focus Session"
                 >
-                  <Zap className="w-4 h-4 text-lockin-red" />
+                  <Zap className="w-3.5 h-3.5 fill-white" />
+                  <span>FOCUS</span>
                 </button>
 
                 <button
